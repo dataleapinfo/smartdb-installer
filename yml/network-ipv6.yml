@@ -1,0 +1,4 @@
+networks:
+  server:
+    driver: bridge
+    enable_ipv6: true

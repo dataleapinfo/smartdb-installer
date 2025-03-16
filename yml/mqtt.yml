@@ -1,0 +1,23 @@
+services:
+  emqx:
+    image: library/emqx:5.7
+    # image: ${REGISTRY:-docker.io}/library/emqx:5.7
+    container_name: smartdb_mqtt
+    restart: always
+    networks:
+      - smartdb
+    ports:
+      - 1883:1883
+      - 8083:8083
+      - 8883:8883
+      - 18083:18083
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - EMQX_NODE__NAME=db_emqx@127.0.0.1
+    volumes:
+      - ${VOLUME_DIR}/emqx/data:/opt/emqx/data
+      - ${VOLUME_DIR}/emqx/log:/opt/emqx/log
+
+networks:
+  smartdb:
+    external: true

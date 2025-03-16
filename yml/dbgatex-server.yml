@@ -1,0 +1,41 @@
+services:
+  dbgatex_server:
+    image: zonesec/dbgate-server:${VERSION}
+    # image: ${REGISTRY:-docker.io}/zonesec/dbgate-server:${VERSION}
+    container_name: smartdb_dbgatex_server
+    restart: always
+    networks:
+      - smartdb
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - NODE_ENV=production_self
+      - ENABLE_ONLINE=1
+      - ONLINE_ADMIN_API=http://smartdb_admin:8084/
+      - ONLINE_ADMIN_HOME=/db
+      # database
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      # redis
+      # - REDIS_TYPE=${REDIS_TYPE}
+      #
+      # redis sentinel
+      # - REDIS_NAME=${REDIS_NAME}
+      # - REDIS_SENTINELS=${REDIS_SENTINELS}
+      # - REDIS_PASSWORD=/run/secrets/redis_password
+      # - REDIS_DB=${REDIS_DB}
+      #
+      # redis single
+      # - REDIS_HOST=${REDIS_HOST:-redis_service}
+      # - REDIS_PORT=${REDIS_PORT:-6379}
+      # - REDIS_PASSWORD=/run/secrets/redis_password
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+networks:
+  smartdb:
+    external: true

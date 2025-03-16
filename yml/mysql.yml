@@ -1,0 +1,41 @@
+services:
+  mysql:
+    image: library/mysql:8.0.40-debian
+    # image: ${REGISTRY:-docker.io}/library/mysql:8.0.40-debian
+    container_name: smartdb_mysql
+    restart: always
+    networks:
+      - smartdb
+    # command: --character-set-server=utf8
+    # env_file:
+    #   - ${CONFIG_ENV}
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - DB_PORT=${DB_PORT}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      # - ${CONFIG_DIR}/mysql/my.cnf:/etc/mysql/my.cnf
+      - ${VOLUME_DIR}/mysql/data:/var/lib/mysql
+    healthcheck:
+      # test: "mysql -h127.0.0.1 -P$$DB_PORT -uroot -p$$MYSQL_ROOT_PASSWORD -e 'SHOW DATABASES;'"
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p$$MYSQL_ROOT_PASSWORD",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+networks:
+  smartdb:
+    external: true

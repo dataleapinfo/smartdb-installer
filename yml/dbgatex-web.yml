@@ -1,0 +1,19 @@
+services:
+  dbgatex_web:
+    image: zonesec/dbgate-web:${VERSION}
+    # image: ${REGISTRY:-docker.io}/zonesec/dbgate-web:${VERSION}
+    container_name: smartdb_dbgatex_web
+    restart: always
+    networks:
+      - smartdb
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+networks:
+  smartdb:
+    external: true

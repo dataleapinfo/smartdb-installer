@@ -1,0 +1,33 @@
+services:
+  redis:
+    image: library/redis:7.2-alpine3.18
+    # image: ${REGISTRY:-docker.io}/library/redis:7.2-alpine3.18
+    container_name: smartdb_redis
+    hostname: smartdb_redis
+    restart: always
+    networks:
+      - smartdb
+    command:
+      [
+        "redis-server",
+        "/usr/local/etc/redis/redis.conf",
+        "--requirepass",
+        "$REDIS_PASSWORD",
+      ]
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - ${VOLUME_DIR}/redis/data:/data
+      - ${CONFIG_DIR}/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: "redis-cli -h 127.0.0.1 -p $$REDIS_PORT -a $$REDIS_PASSWORD info Replication"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  smartdb:
+    external: true
