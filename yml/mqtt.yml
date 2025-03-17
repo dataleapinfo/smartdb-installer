@@ -1,6 +1,6 @@
 services:
   emqx:
-    image: library/emqx:5.7
+    image: emqx:5.7
     # image: ${REGISTRY:-docker.io}/library/emqx:5.7
     container_name: smartdb_mqtt
     restart: always

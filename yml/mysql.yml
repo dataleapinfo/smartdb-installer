@@ -1,6 +1,6 @@
 services:
   mysql:
-    image: library/mysql:8.0.40-debian
+    image: mysql:8.0.40-debian
     # image: ${REGISTRY:-docker.io}/library/mysql:8.0.40-debian
     container_name: smartdb_mysql
     restart: always

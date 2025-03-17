@@ -1,6 +1,6 @@
 services:
   redis:
-    image: library/redis:7.2-alpine3.18
+    image: redis:7.2-alpine3.18
     # image: ${REGISTRY:-docker.io}/library/redis:7.2-alpine3.18
     container_name: smartdb_redis
     hostname: smartdb_redis
