@@ -42,7 +42,7 @@ function install_compose() {
     if [[ ! -d "/usr/local/libexec/docker/cli-plugins" ]]; then
       mkdir -p /usr/local/libexec/docker/cli-plugins
     fi
-    \cp -f ${BASE_DIR}/docker/docker-compose /usr/local/libexec/docker/cli-plugins/
+    \cp -f ${PROJECT_DIR}/public/docker/docker-compose /usr/local/libexec/docker/cli-plugins/
   fi
 }
 

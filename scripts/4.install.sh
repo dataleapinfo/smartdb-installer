@@ -5,7 +5,7 @@ BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 . "${BASE_DIR}/utils.sh"
 
 function check_docker() {
-  if ! comand -v systemctl &>/dev/null; then
+  if ! command -v systemctl &>/dev/null; then
     docker version &> /dev/null || {
       echo "$('Docker is not installed. Please install Docker first')"
       exit 1
@@ -29,13 +29,13 @@ function post_install() {
   
   print_yellow "1. $(gettext 'You can use the following command to start, and then visit')"
   echo "cd ${PROJECT_DIR}"
-  print_green "./jmsctl.sh init_db"
-  echo "./jmsctl.sh start"
+  print_green "./smartdbcli.sh init_db"
+  echo "./smartdbcli.sh start"
 
   print_yellow "\n2. $(gettext 'Other management commands')"
-  echo "./jmsctl.sh stop"
-  echo "./jmsctl.sh restart"
-  echo "$(gettext 'For more commands, you can enter ./jmsctl.sh --help to understand')"
+  echo "./smartdbcli.sh stop"
+  echo "./smartdbcli.sh restart"
+  echo "$(gettext 'For more commands, you can enter ./smartdbcli.sh --help to understand')"
 
   print_yellow "\n3. $(gettext 'Web access')"
   if [ -n "${server_name}" ] && [ -n "${https_port}" ]; then

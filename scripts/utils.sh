@@ -510,3 +510,27 @@ function get_service_name() {
   fi
   echo "${service}"
 }
+
+function get_file_md5() {
+  file_path=$1
+  if [[ -f "${file_path}" ]]; then
+    if [[ "${OS}" == "Darwin" ]]; then
+      md5 "${file_path}" | awk -F= '{ print $2 }'
+    else
+      md5sum "${file_path}" | awk '{ print $1 }'
+    fi
+  fi
+}
+
+function check_md5() {
+  file=$1
+  md5_should=$2
+
+  md5=$(get_file_md5 "${file}")
+  if [[ "${md5}" == "${md5_should}" ]]; then
+    echo "1"
+  else
+    echo "0"
+  fi
+}
+
