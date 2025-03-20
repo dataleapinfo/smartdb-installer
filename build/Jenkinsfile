@@ -1,4 +1,5 @@
-def registryUrl="registry.cn-hangzhou.aliyuncs.com"
+def registryUrl="https://registry.cn-hangzhou.aliyuncs.com"
+def registryCredentialId="aliyuncs"
 def allowedBranches=["refs/heads/master"]
 
 pipeline {
@@ -41,7 +42,7 @@ pipeline {
       steps {
         script {
           try {
-            docker.withRegistry(registryUrl, registryUrl) {
+            docker.withRegistry(registryUrl, registryCredentialId) {
               sh '''
                 cd build
                 chmod +x build.sh
