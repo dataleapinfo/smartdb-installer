@@ -1,7 +1,6 @@
 services:
   dbmanager:
-    image: zonesec/dbmanager:${VERSION}
-    # image: ${REGISTRY:-docker.io}/zonesec/dbmanager:${VERSION}
+    image: smartdb/dbmanager:${VERSION}
     container_name: smartdb_dbmanager
     restart: always
     networks:

@@ -1,7 +1,6 @@
 services:
   dbgatex_web:
-    image: zonesec/dbgate-web:${VERSION}
-    # image: ${REGISTRY:-docker.io}/zonesec/dbgate-web:${VERSION}
+    image: smartdb/dbgatex-web:${VERSION}
     container_name: smartdb_dbgatex_web
     restart: always
     networks:

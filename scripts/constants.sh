@@ -12,11 +12,13 @@ fi
 GLOBAL_ENV=${PROJECT_DIR}/global.env
 . "${GLOBAL_ENV}"
 
+export COPYRIGHT="Copyright (c) 2025 DataLeap Info Tech Co., Ltd. All rights reserved."
+
 export CONFIG_DIR=${GLOBAL_CONFIG_DIR}
-# export CONFIG_DIR=/home/zabbix/opt/smartdb/config
 export CONFIG_ENV=$CONFIG_DIR/.env
 
-export COMPOSE_PROJECT_NAME=smartdb
+export REGISTRY="registry.cn-hangzhou.aliyuncs.com"
+export PUBLIC_IMAGE_PREFIX="dataleapinfo"
 
 export OS=$(uname -s)
 export DOCKER_VERSION=27.4.0

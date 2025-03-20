@@ -27,17 +27,14 @@ function post_install() {
   https_port=$(get_config HTTPS_PORT)
   server_name=$(get_config SERVER_NAME)
   
-  print_yellow "1. $(gettext 'You can use the following command to start, and then visit')"
+  print_yellow "$(gettext 'You can use the following command to start database and SmartDB and then visit')"
   echo "cd ${PROJECT_DIR}"
-  print_green "./smartdbcli.sh init_db"
-  echo "./smartdbcli.sh start"
+  print_green "\n1. First start the database ./smartdbcli.sh init_db"
+  print_green "\n2. And then start SmartDB ./smartdbcli.sh start"
 
-  print_yellow "\n2. $(gettext 'Other management commands')"
-  echo "./smartdbcli.sh stop"
-  echo "./smartdbcli.sh restart"
   echo "$(gettext 'For more commands, you can enter ./smartdbcli.sh --help to understand')"
 
-  print_yellow "\n3. $(gettext 'Web access')"
+  print_yellow "\n $(gettext 'Web access')"
   if [ -n "${server_name}" ] && [ -n "${https_port}" ]; then
     echo "https://${server_name}:${https_port}"
   else

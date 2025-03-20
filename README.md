@@ -9,15 +9,18 @@ On a Linux host: docker 20.10.10-ce+ and docker-compose 1.18.0+ .
 ## 安装部署
 
 ```bash
-# 本地安装
+# 第一步. 安装
 $ ./smartdbcli.sh install
+
+# 第二步. 初始化数据
+$ ./smartdbcli.sh init_db
+
+# 第三步. 启动应用
+$ ./smartdbcli.sh start
+
 ```
 
-## 离线安装
-
-[从官网下载离线安装包](https://doc.dataleapinfo.com//smartdb/download/releases)
-
-## 管理
+## 管理应用
 
 ```
 # 启动
@@ -29,10 +32,18 @@ $ ./smartdbcli.sh stop
 # 重启
 $ ./smartdbcli.sh restart
 
+# 状态
+
+$ ./smartdbcli.sh status
+
 # 日志
 
-$ ./smartdbcli.sh log
+$ ./smartdbcli.sh logs
 ```
+
+## 离线安装
+
+[从官网下载离线安装包](https://doc.dataleapinfo.com//smartdb/download/releases)
 
 ## 目录说明
 

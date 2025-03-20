@@ -305,9 +305,9 @@ function pull_image() {
   echo "[${image}] pulling"
   full_image_path="${image}"
   if [[ -n "${REGISTRY}" ]]; then
-    if echo "${REGISTRY}" | grep -q "/";then
+    if echo "${image}" | grep -q "/";then
       app=$(echo "$image" | awk -F'/' '{ print $NF }')
-      full_image_path="${REGISTRY}/${app}"
+      full_image_path="${REGISTRY}/${PUBLIC_IMAGE_PREFIX}/${app}"
     else
       full_image_path="${REGISTRY}/${image}"
     fi
@@ -337,8 +337,8 @@ function get_images() {
     echo "${image}"
   done
     
-  echo "smartdb/dbgate-server:${VERSION}"
-  echo "smartdb/dbgate-web:${VERSION}"
+  echo "smartdb/dbgatex-server:${VERSION}"
+  echo "smartdb/dbgatex-web:${VERSION}"
   echo "smartdb/smartdata-admin:${VERSION}"
   echo "smartdb/dbmanager:${VERSION}"
 }

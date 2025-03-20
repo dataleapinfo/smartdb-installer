@@ -1,6 +1,6 @@
 services:
   smartdata_admin:
-    image: zonesec/smartdata-admin:${VERSION}
+    image: smartdb/smartdata-admin:${VERSION}
     # image: ${REGISTRY:-docker.io}/zonesec/smartdata-admin:${VERSION}
     container_name: smartdb_admin
     restart: always
