@@ -9,14 +9,7 @@ cd "${PROJECT_DIR}" || exit 1
 TMP_DIR="/tmp/smartdb"
 RELEASE_DIR="${TMP_DIR}/offline"
 
-. "${BUILD_DIR}/constants.sh"
-
-function check_dir() {
-  dir=$1
-  if [[ ! -d "${dir}" ]]; then
-    mkdir -p "${dir}"
-  fi
-}
+. "${BUILD_DIR}/utils.sh"
 
 function download_and_verify() {
   local url=$1
@@ -51,6 +44,9 @@ function download() {
 }
 
 function publish_package() {
+  FILE_NAME="smartdb-offline-${VERSION}"
+  RELEASE_DIR="${TMP_DIR}/${FILE_NAME}"
+  
   rm -rf "${RELEASE_DIR:?}"/*
   mkdir -p "${RELEASE_DIR}"
 
@@ -62,12 +58,12 @@ function publish_package() {
   if [[ -n ${VERSION} ]]; then
     sed -i "s@VERSION=.*@VERSION=\"${VERSION}\"@g" "${RELEASE_DIR}/global.env"
   fi
-
-  FILE_NAME="${TMP_DIR}/smartdb-offline-${VERSION}.tar.gz"
-  tar -cvf ${FILE_NAME} ${RELEASE_DIR}
+  cd ${TMP_DIR}
+  tar -cvf "${FILE_NAME}.tar" ${FILE_NAME}
   
+  cd ${BUILD_DIR}
   check_dir "${DOWNLOAD_DIR}/${VERSION}"
-  mv ${FILE_NAME} "${DOWNLOAD_DIR}/${VERSION}"
+  mv "${TMP_DIR}/${FILE_NAME}.tar" "${DOWNLOAD_DIR}/${VERSION}"
   
   rm -rf "${RELEASE_DIR}"
 }

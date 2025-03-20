@@ -7,13 +7,15 @@ PROJECT_DIR=$(dirname "${BUILD_DIR}")
 cd "${PROJECT_DIR}" || exit 1
 
 TMP_DIR="/tmp/smartdb"
-RELEASE_DIR="${TMP_DIR}/online"
 
-. "${BUILD_DIR}/constants.sh"
+. "${BUILD_DIR}/utils.sh"
 
 function publish_package() {
+  
+  FILE_NAME="smartdb-installer-${VERSION}"
+  RELEASE_DIR="${TMP_DIR}/${FILE_NAME}"
+  
   rm -rf "${RELEASE_DIR:?}"/*
-
   mkdir -p "${RELEASE_DIR}"
 
   cp -R . "${RELEASE_DIR}"
@@ -25,14 +27,14 @@ function publish_package() {
   if [[ -n ${VERSION} ]]; then
     sed -i "s@VERSION=.*@VERSION=\"${VERSION}\"@g" "${RELEASE_DIR}/global.env"
   fi
-  FILE_NAME="${TMP_DIR}/smartdb-installer-${VERSION}.tar.gz"
-  tar -cvf ${FILE_NAME} ${RELEASE_DIR}
+
+  cd ${TMP_DIR}
+  tar -cvf "${FILE_NAME}.tar" ${FILE_NAME}
   
-  if [[ ! -d "${DOWNLOAD_DIR}/${VERSION}" ]]; then
-    mkdir -p "${DOWNLOAD_DIR}/${VERSION}"
-  fi
-  mv ${FILE_NAME} "${DOWNLOAD_DIR}/${VERSION}"
-  
+  cd ${BUILD_DIR}
+  check_dir "${DOWNLOAD_DIR}/${VERSION}"
+  mv "${TMP_DIR}/${FILE_NAME}.tar" "${DOWNLOAD_DIR}/${VERSION}"
+
   rm -rf "${RELEASE_DIR}"
 }
 

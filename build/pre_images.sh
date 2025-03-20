@@ -6,25 +6,11 @@ PROJECT_DIR=$(dirname "${BUILD_DIR}")
 
 cd "${PROJECT_DIR}" || exit 1
 
-. "${BUILD_DIR}/constants.sh"
+. "${BUILD_DIR}/utils.sh"
 
 TMP_DIR="${BUILD_DIR}/tmp"
 
 IMAGE_DIR="${PROJECT_DIR}/images"
-
-function check_dir() {
-  dir=$1
-  if [[ ! -d "${dir}" ]]; then
-    mkdir -p "${dir}"
-  fi
-}
-
-function get_image_name_replace_tag() {
-  image="$1"
-  prefix=$(echo "$image" | cut -d':' -f1)
-  new_image="$prefix:${VERSION}"
-  echo "$new_image"
-}
 
 function save_image() {
   IMAGE="${REGISTRY}/$1"

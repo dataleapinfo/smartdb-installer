@@ -6,7 +6,7 @@ PROJECT_DIR=$(dirname "${BUILD_DIR}")
 
 cd "${PROJECT_DIR}" || exit 1
 
-. "${BUILD_DIR}/constants.sh"
+. "${BUILD_DIR}/utils.sh"
 
 function check_zst () {
   if ! command -v zstd &>/dev/null; then
