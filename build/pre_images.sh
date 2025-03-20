@@ -47,7 +47,7 @@ function save_image() {
   
   echo "tag image: -> $IMAGE_TAG"
   docker tag "$IMAGE" "$IMAGE_TAG"
-  docker tag "$IMAGE" "${REGISTRY}/$IMAGE_TAG"
+  docker tag "$IMAGE" "${ALIYUN_REGISTRY}/$IMAGE_TAG"
   docker push "${ALIYUN_REGISTRY}/$IMAGE_TAG" 
   
   echo
