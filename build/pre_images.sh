@@ -24,13 +24,14 @@ function save_image() {
 
   if [[ -z "$IMAGE" ]]; then
     echo "Image is null pass"
-    return 1;
+    return 1
   fi
 
   echo 
   echo "pull image: $IMAGE"
   if ! docker pull "$IMAGE"; then
     echo "[ERROR] pull image: $IMAGE, pass"
+    exit 1
   fi
   
   IMAGE_TAG=$(echo "$IMAGE" | sed -E 's|^.+/([^/]+/[^:]+:[^:]+)$|\1|')

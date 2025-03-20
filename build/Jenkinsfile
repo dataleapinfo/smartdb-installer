@@ -15,7 +15,6 @@ pipeline {
           withCredentials([string(credentialsId: 'smartdb-installer', variable: 'WEBHOOK_TOKEN')]) {
               tokenCredential = env.WEBHOOK_TOKEN
           }
-          echo "tokenCredential: ${tokenCredential}"
           properties([
               pipelineTriggers([
                   GenericTrigger(
