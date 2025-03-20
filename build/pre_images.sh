@@ -29,7 +29,7 @@ function save_image() {
   
   IMAGE_TAG=$(echo "$IMAGE" | sed -E 's|^.+/([^/]+/[^:]+:[^:]+)$|\1|')
   IMAGE_TAG=$(get_image_name_replace_tag "$IMAGE_TAG")
-  SAFE_NAME=$(echo "$IMAGE_TAG" | tr '/:' '_')
+  SAFE_NAME=$(basename "$IMAGE_TAG" | tr '/:' '_')
   
   echo "tag image: -> $IMAGE_TAG"
   docker tag "$IMAGE" "$IMAGE_TAG"
@@ -41,12 +41,12 @@ function save_image() {
   docker save "$IMAGE_TAG" -o "$TMP_DIR/${SAFE_NAME}.tar"
 
   echo
+  echo "Get md5: ${IMAGE}"
+  docker inspect -f "{{.ID}}" "${IMAGE}" > "$TMP_DIR/${SAFE_NAME}.tar.zst.md5"
+  
+  echo
   echo "compress image: -> "
   zstd -19 "$TMP_DIR/${SAFE_NAME}.tar"
-
-  echo
-  echo "grender md5: $TMP_DIR/${SAFE_NAME}.tar.zst.md5"
-  md5sum "$TMP_DIR/${SAFE_NAME}.tar.zst" | awk '{print $1}' > "$TMP_DIR/${SAFE_NAME}.tar.zst.md5"
   
   docker rmi "$IMAGE"
   docker rmi "$IMAGE_TAG"
@@ -83,20 +83,22 @@ function save_public_image() {
   IMAGE_TAG=$(echo "$IMAGE" | cut -d '/' -f3)
   SAFE_NAME=$(echo "$IMAGE_TAG" | tr '/:' '_')
   
+  image_id=$(docker inspect -f "{{.ID}}" "${IMAGE}" 2&>/dev/null || echo "")
+
   echo "Tag image: -> $IMAGE_TAG"
   docker tag "$IMAGE" "$IMAGE_TAG"
   
   echo
   echo "Save image: $CACHE_DIR/${SAFE_NAME}.tar"
   docker save "$IMAGE_TAG" -o "$CACHE_DIR/${SAFE_NAME}.tar"
+  
+  echo
+  echo "Get md5: ${IMAGE}"
+  docker inspect -f "{{.ID}}" "${IMAGE}" > "$CACHE_DIR/${SAFE_NAME}.tar.zst.md5"
 
   echo
   echo "Compress image: -> "
   zstd -19 "$CACHE_DIR/${SAFE_NAME}.tar"
-
-  echo
-  echo "Grender md5: $CACHE_DIR/${SAFE_NAME}.tar.zst.md5"
-  md5sum "$CACHE_DIR/${SAFE_NAME}.tar.zst" | awk '{print $1}' > "$CACHE_DIR/${SAFE_NAME}.tar.zst.md5"
 
   rm "$CACHE_DIR/${SAFE_NAME}.tar"
   return 0
@@ -140,16 +142,16 @@ function main() {
 
   IMAGES=(
     "${IMAGE_DBMANAGER_VERSION}"
-    "${IMAGE_SMARTDATA_ADMIN_VERSION}"
-    "${IMAGE_DBGATE_SERVER_VERSION}"
-    "${IMAGE_DBGATE_WEB_VERSION}"
+    # "${IMAGE_SMARTDATA_ADMIN_VERSION}"
+    # "${IMAGE_DBGATE_SERVER_VERSION}"
+    # "${IMAGE_DBGATE_WEB_VERSION}"
   )
 
   PUBLIC_IMAGES=(
-    "${IMAGE_REDIS_VERSION}"
-    "${IMAGE_MYSQL_VERSION}"
-    "${IMAGE_EMQX_VERSION}"
-    "${IMAGE_NGINX_VERSION}"
+    # "${IMAGE_REDIS_VERSION}"
+    # "${IMAGE_MYSQL_VERSION}"
+    # "${IMAGE_EMQX_VERSION}"
+    # "${IMAGE_NGINX_VERSION}"
   )
   echo
   pull_images "${IMAGES[@]}"

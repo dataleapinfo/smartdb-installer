@@ -40,6 +40,7 @@ function download() {
   fi
   if [ ! -f "${PROJECT_DIR}/public/docker/docker-compose" ]; then
     cp -R "${CACHE_DIR}/docker-compose" "${PROJECT_DIR}/public/docker/docker-compose"
+    chmod +x "${PROJECT_DIR}/public/docker/docker-compose"
   fi
 }
 
