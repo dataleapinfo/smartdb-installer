@@ -1,3 +1,4 @@
+def allowedBranches=["refs/heads/master"]
 pipeline {
   agent {
     label 'built-in'
