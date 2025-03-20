@@ -1,4 +1,6 @@
+def registryUrl="registry.cn-hangzhou.aliyuncs.com"
 def allowedBranches=["refs/heads/master"]
+
 pipeline {
   agent {
     label 'built-in'
@@ -39,11 +41,13 @@ pipeline {
       steps {
         script {
           try {
-            sh '''
-              cd build
-              chmod +x build.sh
-              ./build.sh
-            '''
+            docker.withRegistry(registryUrl, registryUrl) {
+              sh '''
+                cd build
+                chmod +x build.sh
+                ./build.sh
+              '''
+            }            
             echo "打包成功"
           } catch (err) {
             echo  "打包错误:${err.message}"

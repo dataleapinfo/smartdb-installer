@@ -11,19 +11,24 @@ RELEASE_DIR="${TMP_DIR}/offline"
 
 . "${BUILD_DIR}/constants.sh"
 
+function check_dir() {
+  dir=$1
+  if [[ ! -d "${dir}" ]]; then
+    mkdir -p "${dir}"
+  fi
+}
+
 function download_and_verify() {
   local url=$1
   local target_path=$2
 
   parent_dir=$(dirname "${target_path}")
-  if [[ ! -d "${parent_dir}" ]]; then
-    mkdir -p "${parent_dir}"
-  fi
+  check_dir ${parent_dir}
 
   if [[ ! -f "${target_path}" ]]; then
     echo "Starting to download: ${url}"
     wget -q "${url}" -O "${target_path}" || {
-      print_error "Download fails, check the network is normal"
+      echo "Download fails, check the network is normal"
       rm -f "${target_path}"
       exit 1
     }
@@ -33,9 +38,7 @@ function download_and_verify() {
 }
 function download() {
   
-  if [[ ! -d "${CACHE_DIR}" ]]; then
-    mkdir -p "${CACHE_DIR}"
-  fi
+  check_dir ${CACHE_DIR}
   download_and_verify "${DOCKER_BIN_URL}" "${CACHE_DIR}/docker.tar.gz"
   download_and_verify "${DOCKER_COMPOSE_BIN_URL}" "${CACHE_DIR}/docker-compose"
   
@@ -49,7 +52,6 @@ function download() {
 
 function publish_package() {
   rm -rf "${RELEASE_DIR:?}"/*
-
   mkdir -p "${RELEASE_DIR}"
 
   cp -R . "${RELEASE_DIR}"
@@ -64,9 +66,7 @@ function publish_package() {
   FILE_NAME="${TMP_DIR}/smartdb-offline-${VERSION}.tar.gz"
   tar -cvf ${FILE_NAME} ${RELEASE_DIR}
   
-  if [[ ! -d "${DOWNLOAD_DIR}/${VERSION}" ]]; then
-    mkdir -p "${DOWNLOAD_DIR}/${VERSION}"
-  fi
+  check_dir "${DOWNLOAD_DIR}/${VERSION}"
   mv ${FILE_NAME} "${DOWNLOAD_DIR}/${VERSION}"
   
   rm -rf "${RELEASE_DIR}"

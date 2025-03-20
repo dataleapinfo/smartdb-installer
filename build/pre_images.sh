@@ -12,6 +12,13 @@ TMP_DIR="${BUILD_DIR}/tmp"
 
 IMAGE_DIR="${PROJECT_DIR}/images"
 
+function check_dir() {
+  dir=$1
+  if [[ ! -d "${dir}" ]]; then
+    mkdir -p "${dir}"
+  fi
+}
+
 function get_image_name_replace_tag() {
   image="$1"
   prefix=$(echo "$image" | cut -d':' -f1)
@@ -41,7 +48,7 @@ function save_image() {
   echo "tag image: -> $IMAGE_TAG"
   docker tag "$IMAGE" "$IMAGE_TAG"
   docker tag "$IMAGE" "${REGISTRY}/$IMAGE_TAG"
-  docker push "${REGISTRY}/$IMAGE_TAG" 
+  docker push "${ALIYUN_REGISTRY}/$IMAGE_TAG" 
   
   echo
   echo "save image: $TMP_DIR/${SAFE_NAME}.tar"
@@ -57,7 +64,7 @@ function save_image() {
   
   docker rmi "$IMAGE"
   docker rmi "$IMAGE_TAG"
-  docker rmi "${REGISTRY}/$IMAGE_TAG"
+  docker rmi "${ALIYUN_REGISTRY}/$IMAGE_TAG"
 
   rm -rf "$TMP_DIR/${SAFE_NAME}.tar"
   return 0
@@ -69,7 +76,8 @@ function pull_images() {
   for image in "${images[@]}"; do
     save_image "$image" || echo "[Pass] image error: $image"
   done
-  
+   
+  check_dir "$IMAGE_DIR"
   mv "$TMP_DIR"/* "$IMAGE_DIR" || echo "[ERROR] Unable to move file, please check manually." 
 }
 
