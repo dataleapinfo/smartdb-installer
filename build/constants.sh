@@ -2,7 +2,7 @@
 
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-. "${BUILD_DIR}/.env"
+. "${BUILD_DIR}/version.env"
 
 export CACHE_DIR=~/.smartdb/cache
 export DOWNLOAD_DIR=/home/download/smartdb

@@ -1,5 +1,5 @@
 # 发布在线版和离线版
 
-## 版本信息在.env中指定
+## 使用方法
 
-提交 git tag，通过 build.sh发布
+修改version.env版本，提交到git，自动发布
