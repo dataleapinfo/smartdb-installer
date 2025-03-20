@@ -44,8 +44,31 @@ function download_and_verify() {
   fi
 }
 
+function download() {
+  local url=$1
+  local target_path=$2
+
+  parent_dir=$(dirname "${target_path}")
+  if [[ ! -d "${parent_dir}" ]]; then
+    mkdir -p "${parent_dir}"
+  fi
+
+  check_required_pkg
+
+  if [[ ! -f "${target_path}" ]]; then
+    echo "Starting to download: ${url}"
+    wget -q "${url}" -O "${target_path}" || {
+      print_error "Download fails, check the network is normal"
+      rm -f "${target_path}"
+      exit 1
+    }
+  else
+    echo "Using cache: ${target_path}"
+  fi
+}
+
 function prepare_docker_bin() {
-  download_and_verify "${DOCKER_BIN_URL}" "${PROJECT_DIR}/public/docker/docker.tar.gz"
+  download "${DOCKER_BIN_URL}" "${PROJECT_DIR}/public/docker/docker.tar.gz"
 }
 
 function prepare_compose_bin() {

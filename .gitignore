@@ -6,6 +6,7 @@ backup
 config.txt
 cofnig.link
 .env
+yml/.env
 .bak
 config.link
 release/*

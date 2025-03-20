@@ -1,24 +1,12 @@
 #!/usr/bin/env bash
 
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-export SCRIPT_DIR="$BASE_DIR"
-PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
+. "${BUILD_DIR}/.env"
 
-if [[ ! "$(echo $PATH | grep /usr/local/bin)" ]]; then
-  export PATH=/usr/local/bin:$PATH
-fi
+export CACHE_DIR=~/.smartdb/cache
+export DOWNLOAD_DIR=/home/download/smartdb
 
-GLOBAL_ENV=${PROJECT_DIR}/global.env
-. "${GLOBAL_ENV}"
-
-export CONFIG_DIR=${GLOBAL_CONFIG_DIR}
-# export CONFIG_DIR=/home/zabbix/opt/smartdb/config
-export CONFIG_ENV=$CONFIG_DIR/.env
-
-export COMPOSE_PROJECT_NAME=smartdb
-
-export OS=$(uname -s)
 export DOCKER_VERSION=27.4.0
 export DOCKER_MIRROR="https://mirrors.aliyun.com/docker-ce/linux/static/stable"
 

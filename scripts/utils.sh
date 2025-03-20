@@ -328,19 +328,19 @@ function pull_image() {
 function get_images() {
   # db_images=$(get_db_images)
   images=(
-    "library/redis:7.2-alpine3.18"
-    "library/mysql:8.0.40-debian"
-    "library/emqx:5.7"
-    "library/nginx:1.25.3-alpine3.18"
+    "redis:7.2-alpine3.18"
+    "mysql:8.0.40-debian"
+    "emqx:5.7"
+    "nginx:1.25.3-alpine3.18"
   )
   for image in "${images[@]}"; do
     echo "${image}"
   done
     
-  echo "zonesec/dbgate-server:${VERSION}"
-  echo "zonesec/dbgate-web:${VERSION}"
-  echo "zonesec/smartdata-admin:${VERSION}"
-  echo "zonesec/dbmanager:${VERSION}"
+  echo "smartdb/dbgate-server:${VERSION}"
+  echo "smartdb/dbgate-web:${VERSION}"
+  echo "smartdb/smartdata-admin:${VERSION}"
+  echo "smartdb/dbmanager:${VERSION}"
 }
 
 function check_images() {
