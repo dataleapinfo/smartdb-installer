@@ -33,8 +33,8 @@ function save_image() {
   
   echo "tag image: -> $IMAGE_TAG"
   docker tag "$IMAGE" "$IMAGE_TAG"
-  docker tag "$IMAGE" "${ALIYUN_REGISTRY}/$IMAGE_TAG"
-  docker push "${ALIYUN_REGISTRY}/$IMAGE_TAG" 
+  docker tag "$IMAGE" "${PUBLISH_ALIYUN_REGISTRY}/$IMAGE_TAG"
+  docker push "${PUBLISH_ALIYUN_REGISTRY}/$IMAGE_TAG" 
   
   echo
   echo "save image: $TMP_DIR/${SAFE_NAME}.tar"
@@ -50,7 +50,7 @@ function save_image() {
   
   docker rmi "$IMAGE"
   docker rmi "$IMAGE_TAG"
-  docker rmi "${ALIYUN_REGISTRY}/$IMAGE_TAG"
+  docker rmi "${PUBLISH_ALIYUN_REGISTRY}/$IMAGE_TAG"
 
   rm -rf "$TMP_DIR/${SAFE_NAME}.tar"
   return 0
@@ -142,16 +142,16 @@ function main() {
 
   IMAGES=(
     "${IMAGE_DBMANAGER_VERSION}"
-    # "${IMAGE_SMARTDATA_ADMIN_VERSION}"
-    # "${IMAGE_DBGATE_SERVER_VERSION}"
-    # "${IMAGE_DBGATE_WEB_VERSION}"
+    "${IMAGE_SMARTDATA_ADMIN_VERSION}"
+    "${IMAGE_DBGATE_SERVER_VERSION}"
+    "${IMAGE_DBGATE_WEB_VERSION}"
   )
 
   PUBLIC_IMAGES=(
-    # "${IMAGE_REDIS_VERSION}"
-    # "${IMAGE_MYSQL_VERSION}"
-    # "${IMAGE_EMQX_VERSION}"
-    # "${IMAGE_NGINX_VERSION}"
+    "${IMAGE_REDIS_VERSION}"
+    "${IMAGE_MYSQL_VERSION}"
+    "${IMAGE_EMQX_VERSION}"
+    "${IMAGE_NGINX_VERSION}"
   )
   echo
   pull_images "${IMAGES[@]}"

@@ -1,7 +1,6 @@
 services:
   smartdata_admin:
     image: smartdb/smartdata-admin:${VERSION}
-    # image: ${REGISTRY:-docker.io}/zonesec/smartdata-admin:${VERSION}
     container_name: smartdb_admin
     restart: always
     networks:
@@ -46,7 +45,8 @@ services:
     volumes:
       - ${VOLUME_DIR}/admin/data:/app/smartdb
       - ${VOLUME_DIR}/admin/data:/app/logs
-      # - ${COINFIG_DIR}/admin/montior.json:/app/smartdb/monitor.json
+      - ${COINFIG_DIR}/admin/license:/app/smartdb/license
+      - ${COINFIG_DIR}/admin/montior.json:/app/smartdb/monitor.json
 networks:
   smartdb:
     external: true
