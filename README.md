@@ -6,6 +6,11 @@
 
 On a Linux host: docker 20.10.10-ce+ and docker-compose 1.18.0+ .
 
+## 配置文件
+
+如果需要，请在安装前自定义属性默认值；否则将使用自带默认值
+example.env
+
 ## 安装部署
 
 ```bash

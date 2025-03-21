@@ -210,6 +210,8 @@ function pre_config() {
   else 
     print_check "${CONFIG_DIR}/redis/redis.conf"
   fi
+  
+  cp -R "${PROJECT_DIR}/config/admin/license" "${CONFIG_DIR}/admin/license"
 
   chmod 700 "${CONFIG_DIR}/.."
   find "${CONFIG_DIR}" -type d -exec chmod 700 {} \;
