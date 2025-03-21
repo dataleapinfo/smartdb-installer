@@ -45,8 +45,8 @@ services:
     volumes:
       - ${VOLUME_DIR}/admin/data:/app/smartdb
       - ${VOLUME_DIR}/admin/data:/app/logs
-      - ${COINFIG_DIR}/admin/license:/app/smartdb/license
-      - ${COINFIG_DIR}/admin/montior.json:/app/smartdb/monitor.json
+      - ${CONFIG_DIR}/admin/license:/app/smartdb/license
+      - ${CONFIG_DIR}/admin/montior.json:/app/smartdb/monitor.json
 networks:
   smartdb:
     external: true

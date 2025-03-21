@@ -28,13 +28,22 @@ function init_db() {
   docker exec -i smartdb_mysql mysql -u"$db_user" -p"$db_password" < "${PROJECT_DIR}/sql/${db_engine}/smartdata.sql"
 }
 
+function post_install() {
+  print_green "\n>>> Database completed."
+  
+  print_green "\n1. And then start SmartDB ./smartdbcli.sh start"
+
+  echo "$(gettext 'For more commands, you can enter ./smartdbcli.sh --help to understand')"
+}
+
 function main() {
   print_yellow ">>>1. Start database ..."
   start_db
   sleep 0.5
   print_yellow ">>>2. Init database ..."
   init_db
-  print_done
+  
+  post_install
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

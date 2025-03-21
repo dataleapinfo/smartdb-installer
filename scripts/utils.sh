@@ -305,7 +305,7 @@ function pull_image() {
   echo "[${image}] pulling"
   full_image_path="${image}"
   if [[ -n "${REGISTRY}" ]]; then
-    if echo "${image}" | grep -q "/";then
+    if ! echo "${image}" | grep -q "/";then
       app=$(echo "$image" | awk -F'/' '{ print $NF }')
       full_image_path="${REGISTRY}/${PUBLIC_IMAGE_PREFIX}/${app}"
     else
