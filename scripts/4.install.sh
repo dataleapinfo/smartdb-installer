@@ -19,7 +19,7 @@ function check_docker() {
 
 function post_install() {
   print_green "\n>>> Install completed."
-  host=${get_host_ip}
+  host=$(get_host_ip)
   if [[ -z "${host}" ]]; then
     host="127.0.0.1"
   fi
