@@ -178,6 +178,8 @@ function pre_config() {
   mkdir_if_not_exist "${CONFIG_DIR}/nginx"
   mkdir_if_not_exist "${CONFIG_DIR}/nginx/ssl"
   mkdir_if_not_exist "${CONFIG_DIR}/redis"
+  mkdir_if_not_exist "${CONFIG_DIR}/admin"
+  mkdir_if_not_exist "${CONFIG_DIR}/admin/license"
 
   if [[ ! -f "${CONFIG_ENV}" ]]; then
     cp example.env "${CONFIG_ENV}"
@@ -210,9 +212,14 @@ function pre_config() {
   else 
     print_check "${CONFIG_DIR}/redis/redis.conf"
   fi
+  if [[ ! -f "${CONFIG_DIR}/admin/license/key.pem" ]]; then
+    cp "${PROJECT_DIR}/config/admin/license/key.pem" "${CONFIG_DIR}/admin/license/key.pem"
+    cp "${PROJECT_DIR}/config/admin/license/encrypted.dat" "${CONFIG_DIR}/admin/license/encrypted.dat"
+    cp "${PROJECT_DIR}/config/admin/license/encrypted.signed" "${CONFIG_DIR}/admin/license/encrypted.signed"
+  else 
+    print_check "${CONFIG_DIR}/admin/license/key.pem"
+  fi
   
-  cp -R "${PROJECT_DIR}/config/admin/license" "${CONFIG_DIR}/admin/license"
-
   chmod 700 "${CONFIG_DIR}/.."
   find "${CONFIG_DIR}" -type d -exec chmod 700 {} \;
   find "${CONFIG_DIR}" -type f -exec chmod 600 {} \;
