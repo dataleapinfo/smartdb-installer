@@ -44,21 +44,26 @@ function help() {
   echo "  ./smartdbcli.sh help"
   echo
   echo "Installation Actions: "
-  echo "  install       Install SmartDB"
-  echo "  init_db       Initialize SmartDB Database"
+  echo "  install                   Install SmartDB"
+  echo "  init_db                   Initialize SmartDB Database"
   echo
   echo "Components Actions: "
-  echo "  start         Start components"
-  echo "  stop          Stop components"
-  echo "  restart       Restart components"
+  echo "  start                     Start components"
+  echo "  stop                      Stop components"
+  echo "  restart                   Restart components"
   echo
   echo "Database Actions: "
-  echo "  start_db         Start database"
-  echo "  stop_db          Stop database"
+  echo "  start_db                  Start database"
+  echo "  stop_db                   Stop database"
+  echo "  backup_db                 Backup database"
+  echo "  restore_db [backup_file]  Restore database"
   echo
-  echo "Other Actions: "
-  echo "  status        Show SmartDB status"
-  echo "  config        Config SmartDB"
+  echo "More Actions: "
+  echo "  status                    Show SmartDB status"
+  echo "  logs [service]            Show SmartDB logs"
+  echo "  version                   Show version"
+  echo "  uninstall                 Uninstall SmartDB"
+  # echo "  config                  Config SmartDB"
   echo 
 }
 EXEC_COMMANDS=""
@@ -142,7 +147,7 @@ function main() {
       start_network
       ;;
     init_db)
-      bash "${SCRIPT_DIR}/00.init_db.sh"
+      bash "${SCRIPT_DIR}/00.init-db.sh"
       ;;
     start)
       start
@@ -165,10 +170,23 @@ function main() {
     logs)
       logs    
       ;;
+    version | -v | --version)
+      get_curr_version  
+      ;;
     config)
       echo "..."
       ;;
+    backup_db)
+      bash "${SCRIPT_DIR}/5.backup-db.sh"
+      ;;
+    restore_db)
+      bash "${SCRIPT_DIR}/6.restore-db.sh" "$target"
+      ;;
+    uninstall)
+      bash "${SCRIPT_DIR}/8.uninstall.sh"
+      ;;
     *)
+      echo "unknown action: ${action}"
       help
       ;;
   esac

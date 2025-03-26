@@ -30,7 +30,7 @@ function post_install() {
   print_yellow "$(gettext 'You can use the following command to start database and SmartDB and then visit')"
   echo "cd ${PROJECT_DIR}"
   print_green "\n1. First start the database ./smartdbcli.sh init_db"
-  print_green "\n2. And then start SmartDB ./smartdbcli.sh start"
+  echo "\n2. And then start SmartDB ./smartdbcli.sh start"
 
   echo "$(gettext 'For more commands, you can enter ./smartdbcli.sh --help to understand')"
 
@@ -41,7 +41,8 @@ function post_install() {
     echo "http://${host}:${http_port}"
   fi
 
-  echo "$(gettext 'Default username'): admin  $(gettext 'Default password'): 123123"
+  echo "$(gettext 'Default username'): admin  $(gettext 'Default password'): admin"
+  echo "Please change the password after the first login"
 
   print_yellow "\n $(gettext 'More information')"
   echo "$(gettext 'Official Website'): https://www.dataleapinfo.com"

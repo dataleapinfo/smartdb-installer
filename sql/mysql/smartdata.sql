@@ -94,14 +94,11 @@ CREATE TABLE IF NOT EXISTS `sys_config`  (
 -- Records of sys_config
 -- ----------------------------
 INSERT INTO `sys_config` VALUES (1, '主框架页-默认皮肤样式名称2', 'sys.index.skinName', 'skin-blue', 'Y', 'admin', '2023-11-22 07:31:34', '', NULL, '蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow');
-INSERT INTO `sys_config` VALUES (2, '用户管理-账号初始密码', 'sys.user.initPassword', '123456', 'Y', 'admin', '2023-11-22 07:31:34', '', NULL, '初始化密码 123456');
+INSERT INTO `sys_config` VALUES (2, '用户管理-账号初始密码', 'sys.user.initPassword', 'admin', 'Y', 'admin', '2023-11-22 07:31:34', '', NULL, '初始化密码 admin');
 INSERT INTO `sys_config` VALUES (3, '主框架页-侧边栏主题', 'sys.index.sideTheme', 'theme-dark', 'Y', 'admin', '2023-11-22 07:31:34', '', NULL, '深色主题theme-dark，浅色主题theme-light');
 INSERT INTO `sys_config` VALUES (4, '账号自助-验证码开关', 'sys.account.captchaEnabled', 'true', 'Y', 'admin', '2023-11-22 07:31:34', '', NULL, '是否开启验证码功能（true开启，false关闭）');
 INSERT INTO `sys_config` VALUES (5, '账号自助-是否开启用户注册功能', 'sys.account.registerUser', 'false', 'Y', 'admin', '2023-11-22 07:31:34', '', NULL, '是否开启注册用户功能（true开启，false关闭）');
 INSERT INTO `sys_config` VALUES (6, '用户登录-黑名单列表', 'sys.login.blackIPList', '', 'Y', 'admin', '2023-11-22 07:31:34', '', NULL, '设置登录IP黑名单限制，多个匹配项以;分隔，支持匹配（*通配、网段）');
-INSERT INTO `sys_config` VALUES (7, '用户登录-OIDC认证域名', 'sys.login.ssoUrl', 'http://sso.dataleapinfo.cn', 'Y', 'admin', '2023-12-06 16:51:34', '', NULL, '设置OIDC认证域名');
-INSERT INTO `sys_config` VALUES (8, '用户登录-客户端ID', 'sys.login.clientId', '6548e1f8dff21aa6f65e159d', 'Y', 'admin', '2023-12-06 16:53:12', '', NULL, '设置OIDC客户端编号');
-INSERT INTO `sys_config` VALUES (9, '用户登录-客户端密钥', 'sys.login.secret', '1f0b227643425d4a439379d927b66794', 'Y', 'admin', '2023-12-06 16:54:50', '', NULL, '设置OIDC客户端密钥');
 INSERT INTO `sys_config` VALUES (100, '告警方式-邮箱告警', 'sys.warn.mail', '0', 'N', 'admin', '2024-06-04 19:31:07', '', '2024-07-15 16:04:22', NULL);
 INSERT INTO `sys_config` VALUES (101, '告警方式-短信告警', 'sys.warn.sms', '1', 'N', 'admin', '2024-06-04 19:31:07', '', '2024-07-15 16:04:21', NULL);
 INSERT INTO `sys_config` VALUES (102, '告警方式-微信公众号', 'sys.warn.wx', '1', 'N', 'admin', '2024-06-04 19:31:07', '', '2024-07-15 16:04:21', NULL);
@@ -109,9 +106,9 @@ INSERT INTO `sys_config` VALUES (103, '告警方式-钉钉', 'sys.warn.ding', '0
 INSERT INTO `sys_config` VALUES (104, '告警方式-企业微信', 'sys.warn.enp', '0', 'N', 'admin', '2024-06-04 19:31:07', '', NULL, NULL);
 INSERT INTO `sys_config` VALUES (105, '邮件服务器', 'sys.mail.host', 'smtp.qq.com', 'Y', '', NULL, '', NULL, NULL);
 INSERT INTO `sys_config` VALUES (106, '邮件服务器端口', 'sys.mail.port', '465', 'Y', '', NULL, '', NULL, NULL);
-INSERT INTO `sys_config` VALUES (107, '系统邮件发送人', 'sys.mail.userId', '979401667', 'Y', '', NULL, '', NULL, NULL);
+INSERT INTO `sys_config` VALUES (107, '系统邮件发送人', 'sys.mail.userId', 'example', 'Y', '', NULL, '', NULL, NULL);
 INSERT INTO `sys_config` VALUES (108, '系统邮件发送人密码', 'sys.mail.pwd', 'xavtexjzdfiubajb', 'Y', '', NULL, '', NULL, NULL);
-INSERT INTO `sys_config` VALUES (109, '系统邮件发送人邮箱', 'sys.mail.sendbox', '979401667@qq.com', 'Y', '', NULL, '', NULL, NULL);
+INSERT INTO `sys_config` VALUES (109, '系统邮件发送人邮箱', 'sys.mail.sendbox', 'example@qq.com', 'Y', '', NULL, '', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_dataoper_authlog
@@ -215,13 +212,6 @@ CREATE TABLE IF NOT EXISTS `sys_desen_config`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of sys_desen_config
--- ----------------------------
-INSERT INTO `sys_desen_config` VALUES (1, '用户手机', '^1[3-9]\\d{9}$', 4, 0, 'admin', '2024-05-29 22:39:05', 'admin', '2024-08-27 13:52:08');
-INSERT INTO `sys_desen_config` VALUES (2, '身份证号', '^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}(\\d|X|x)$', 4, 0, 'admin', '2024-05-29 22:56:15', 'admin', '2024-08-27 13:51:58');
-INSERT INTO `sys_desen_config` VALUES (3, '电子邮箱', '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', 4, 0, 'admin', '2024-05-29 22:58:12', 'admin', '2024-08-27 13:51:14');
 
 -- ----------------------------
 -- Table structure for sys_dict_data
@@ -849,7 +839,7 @@ CREATE TABLE IF NOT EXISTS `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 100, 'admin', '管理员', '00', '', '', '1', '', '$2a$10$wQDpcXJrstbs4hF90v.6UOC52apl6G8yDwQlpb0mZZizOq2I69Nty', '0', '0', '61.152.208.159', '2024-10-14 11:00:46', 'admin', '2023-11-22 07:31:26', '', '2024-10-14 11:00:46', '管理员');
+INSERT INTO `sys_user` VALUES (1, 100, 'admin', '管理员', '00', '', '', '1', '', '$2a$10$EZQPvCM4CyQXvQnaHXSwX.hRsw7c/CgjNezEFtQCpbanvV7Yf/zBa', '0', '0', '61.152.208.159', '2024-10-14 11:00:46', 'admin', '2023-11-22 07:31:26', '', '2024-10-14 11:00:46', '管理员');
 
 -- ----------------------------
 -- Table structure for sys_user_post
@@ -1404,6 +1394,7 @@ CREATE TABLE IF NOT EXISTS `tbl_database`  (
   `trino_flag` int(1) NULL DEFAULT NULL COMMENT 'trino标记0不依赖1依赖',
   `trino_catalog` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据库类型的名称',
 	`version` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据库引擎版本',
+  `credential_id` int(10) NULL DEFAULT NULL COMMENT '凭证id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
@@ -2597,6 +2588,7 @@ CREATE TABLE IF NOT EXISTS `tbl_terminal`  (
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新者',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `credential_id` int(10) NULL DEFAULT NULL COMMENT '凭证id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
@@ -2667,12 +2659,12 @@ CREATE TABLE IF NOT EXISTS `tbl_credential`  (
   `status` int(1) NULL DEFAULT NULL COMMENT '状态0激活 1禁用',
   `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '用户名', 
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '密码(加密存储)', 
-  `private_key` tinytext CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '私钥(加密存储)', 
-  `passphrase` tinytext CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '私钥密码(加密存储)', 
+  `private_key` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '私钥(加密存储)', 
+  `passphrase` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '私钥密码(加密存储)', 
   `api_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT 'api key(加密存储)', 
   `expires_at` datetime NULL DEFAULT NULL COMMENT '凭证过期时间，默认null,不过期',
   `tags` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '标签', 
-  `metadata` tinytext CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '附加信息 json存储',
+  `metadata` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '附加信息 json存储',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
