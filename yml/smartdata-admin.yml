@@ -1,14 +1,13 @@
 services:
   smartdata_admin:
     image: smartdb/smartdata-admin:${VERSION}
-    container_name: smartdb_admin
+    container_name: smartdb_smartdata_admin
     restart: always
     networks:
       - smartdb
     environment:
       - TZ=${TZ:-Asia/Shanghai}
       - JAVA_OPTS=-Xms512m -Xmx1024m
-      # - PORT=80
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_USER=${DB_USER}
@@ -41,7 +40,7 @@ services:
       - APP_TITLE=${DB_APP_TITLE:-}
       - APP_SHORT_TITLE=${DB_APP_SHORT_TITLE:-}
       # - CID=${UNIQUE_ID}
-      - JUMPER_URL=http://smartdb_dbgatex_server:3000/terminals/exec
+      - JUMPER_URL=http://dbgatex_server:3000/terminals/exec
     volumes:
       - ${VOLUME_DIR}/admin/data:/app/smartdb
       - ${VOLUME_DIR}/admin/data:/app/logs

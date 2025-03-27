@@ -1,5 +1,5 @@
 services:
-  emqx:
+  mqtt:
     image: emqx:5.7
     container_name: smartdb_mqtt
     restart: always
