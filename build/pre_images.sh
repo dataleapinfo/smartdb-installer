@@ -33,6 +33,10 @@ function save_image() {
   
   echo "tag image: -> $IMAGE_TAG"
   docker tag "$IMAGE" "$IMAGE_TAG"
+  
+  docker tag "$IMAGE" "${REGISTRY}/$IMAGE_TAG"
+  docker push "${REGISTRY}/$IMAGE_TAG" 
+  
   docker tag "$IMAGE" "${PUBLISH_ALIYUN_REGISTRY}/$IMAGE_TAG"
   docker push "${PUBLISH_ALIYUN_REGISTRY}/$IMAGE_TAG" 
   
@@ -50,6 +54,8 @@ function save_image() {
   
   docker rmi "$IMAGE"
   docker rmi "$IMAGE_TAG"
+
+  docker rmi "${REGISTRY}/$IMAGE_TAG"
   docker rmi "${PUBLISH_ALIYUN_REGISTRY}/$IMAGE_TAG"
 
   rm -rf "$TMP_DIR/${SAFE_NAME}.tar"

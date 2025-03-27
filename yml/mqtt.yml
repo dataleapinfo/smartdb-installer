@@ -13,8 +13,9 @@ services:
     environment:
       - TZ=${TZ:-Asia/Shanghai}
       - EMQX_NODE__NAME=db_emqx@127.0.0.1
+      - EMQX_DATA_DIR=/data
     volumes:
-      - ${VOLUME_DIR}/emqx/data:/opt/emqx/data
+      - ${VOLUME_DIR}/emqx/data:/data
       - ${VOLUME_DIR}/emqx/log:/opt/emqx/log
 
 networks:
