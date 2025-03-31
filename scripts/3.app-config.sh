@@ -184,12 +184,21 @@ function set_redis() {
 
 function set_service() {
   print_yellow "\n4. $(gettext 'Config SmartDB service')"
-  http_port=$(get_config HTTP_PORT)
+  # http_port=$(get_config HTTP_PORT)
+  https_port=$(get_config HTTPS_PORT)
+  
+  # confirm="n"
+  # read_from_input confirm "$(gettext 'Do you need to customize the SmartDB external http port, defualt is 80')?" "y/n" "${confirm}"
+  # if [[ "${confirm}" == "y" ]]; then
+  #   read_from_input http_port "$(gettext 'SmartDB web port')" "" "${http_port}"
+  #   set_config HTTP_PORT "${http_port}"
+  # fi
+  
   confirm="n"
-  read_from_input confirm "$(gettext 'Do you need to customize the SmartDB external port')?" "y/n" "${confirm}"
+  read_from_input confirm "$(gettext 'Do you need to customize the SmartDB external https port, defualt is 443')?" "y/n" "${confirm}"
   if [[ "${confirm}" == "y" ]]; then
-    read_from_input http_port "$(gettext 'SmartDB web port')" "" "${http_port}"
-    set_config HTTP_PORT "${http_port}"
+    read_from_input https_port "$(gettext 'SmartDB web port')" "" "${https_port}"
+    set_config HTTPS_PORT "${https_port}"
   fi
 }
 

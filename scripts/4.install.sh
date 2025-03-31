@@ -23,7 +23,7 @@ function post_install() {
   if [[ -z "${host}" ]]; then
     host="127.0.0.1"
   fi
-  http_port=$(get_config HTTP_PORT)
+  # http_port=$(get_config HTTP_PORT)
   https_port=$(get_config HTTPS_PORT)
   server_name=$(get_config SERVER_NAME)
   
@@ -35,10 +35,10 @@ function post_install() {
   echo "$(gettext 'For more commands, you can enter ./smartdbcli.sh --help to understand')"
 
   print_yellow "\n $(gettext 'Web access')"
-  if [ -n "${server_name}" ] && [ -n "${https_port}" ]; then
+  if [ -n "${server_name}" ]; then
     echo "https://${server_name}:${https_port}"
   else
-    echo "http://${host}:${http_port}"
+    echo "http://${host}:${https_port}"
   fi
 
   echo "$(gettext 'Default username'): admin  $(gettext 'Default password'): admin"
