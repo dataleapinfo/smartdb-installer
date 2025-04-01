@@ -199,6 +199,9 @@ function set_service() {
     read_from_input https_port "$(gettext 'SmartDB web https port')" "" "${https_port}"
     set_config HTTPS_PORT "${https_port}"
   fi
+  
+  sed -i "s/HTTP_PORT/${http_port}/g" ${CONFIG_DIR}/nginx/smartdb.conf
+  sed -i "s/HTTPS_PORT/${https_port}/g" ${CONFIG_DIR}/nginx/smartdb.conf
 }
 
 function main() {
