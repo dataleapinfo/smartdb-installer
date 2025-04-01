@@ -53,8 +53,6 @@ function help() {
   echo "  restart                   Restart components"
   echo
   echo "Database Actions: "
-  echo "  start_db                  Start database"
-  echo "  stop_db                   Stop database"
   echo "  backup_db                 Backup database"
   echo "  restore_db [backup_file]  Restore database"
   echo
@@ -157,12 +155,6 @@ function main() {
       ;;
     restart)
       restart
-      ;;
-    start_db)
-      start_db
-      ;;
-    stop_db)
-      stop_db
       ;;
     status)
       ${EXEC_COMMANDS} ps

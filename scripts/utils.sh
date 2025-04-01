@@ -458,13 +458,25 @@ function get_db_images_yml() {
 }
 
 function get_db_services() {
-  services="mysql redis"
+  services="mysql"
 
   echo "${services}"
 }
 
 function get_app_services() {
-  services="mqtt nginx dbmanager smartdata-admin dbgatex-server dbgatex-web"
+  services="dbmanager smartdata-admin dbgatex-server dbgatex-web mqtt nginx"
+  is_buildin_db=$(get_config DB_HOST)
+  if [[ "${is_buildin_db}" == "mysql" ]]; then
+    services="mysql ${services}"
+  fi
+
+  if [[ "${is_buildin_db}" == "postgresql" ]]; then
+    services="postgresql ${services}"
+  fi
+  is_buildin_redis=$(get_config REDIS_HOST)
+  if [[ "${is_buildin_redis}" == "redis" ]]; then
+    services="redis ${services}"
+  fi
 
   echo "${services}"
 }
@@ -499,7 +511,7 @@ function get_app_service_commands() {
   fi
   services=$(get_app_services)
 
-  for service in mqtt nginx dbmanager smartdata-admin dbgatex-server dbgatex-web; do
+  for service in redis mysql postgresql mqtt nginx dbmanager smartdata-admin dbgatex-server dbgatex-web; do
     if [[ "${services}" =~ ${service} ]]; then
       cmd+=" -f yml/${service}.yml"
     fi

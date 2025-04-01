@@ -10,7 +10,6 @@ function stop_services() {
   if [[ -f "$CONFIG_ENV" ]]; then
     cd "${PROJECT_DIR?}" || exit 1
     bash ./smartdbcli.sh stop
-    bash ./smartdbcli.sh stop_db
     sleep 5s
     echo 
   fi

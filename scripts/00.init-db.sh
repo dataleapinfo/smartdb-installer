@@ -29,6 +29,7 @@ function init_db() {
 }
 
 function post_install() {
+
   print_green "\n>>> Database completed."
   
   print_green "\n1. And then start SmartDB ./smartdbcli.sh start"
@@ -39,10 +40,9 @@ function post_install() {
 function main() {
   print_yellow ">>>1. Start database ..."
   start_db
-  sleep 0.5
+  sleep 1
   print_yellow ">>>2. Init database ..."
   init_db
-  
   post_install
 }
 
