@@ -10,6 +10,7 @@ function stop_services() {
   if [[ -f "$CONFIG_ENV" ]]; then
     cd "${PROJECT_DIR?}" || exit 1
     bash ./smartdbcli.sh stop
+    bash ./smartdbcli.sh stop_db
     sleep 5s
     echo 
   fi
@@ -28,7 +29,7 @@ function delete_smartdb() {
   fi 
   echo 
   print_warn "Please sure you have saved the backup file, this operation will delete all data and then is irreversible!!! \n"
-  print_yellow ">>> Delete SmartDB ..."
+  print_yellow ">>> Delete ${PROJECT_NAME} ..."
   images=$(get_images)
   volumes=$(get_config VOLUME_DIR)
   confirm="n"
@@ -106,7 +107,13 @@ function uninstall() {
 }
 
 function main() {
-  print_yellow ">>> Uninstall SmartDB ..."
+  confirm="n"
+  read_from_input confirm "Do you want to uninstall ${PROJECT_NAME}?" "y/n" "${confirm}"
+  if [[ "${confirm}" != "y" ]]; then
+    exit 1
+  fi
+
+  print_yellow ">>> Uninstall ${PROJECT_NAME} ..."
   uninstall
   print_green ">>> Uninstall Done"
 }

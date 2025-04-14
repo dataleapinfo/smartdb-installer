@@ -106,7 +106,8 @@ function set_db() {
       ;;
     *)
       echo "Invalid DB Engine selection"
-      exit 1
+      set_db
+      # exit 1
       ;;
   esac
 }
@@ -178,30 +179,39 @@ function set_redis() {
         ;;
     *)
         print_error "$(gettext 'Invalid Redis Engine selection')"
+        set_redis
         ;;
   esac
 }
 function set_service() {
-  print_yellow "\n4. $(gettext 'Config SmartDB service')"
+  print_yellow "\n4. $(gettext 'Config app service')"
   http_port=$(get_config HTTP_PORT)
   https_port=$(get_config HTTPS_PORT)
 
   confirm="n"
-  read_from_input confirm "$(gettext 'Do you need to customize the SmartDB external http port, defualt is ')${http_port}?" "y/n" "${confirm}"
+  read_from_input confirm "$(gettext 'Do you need to customize the app external http port, defualt is ')${http_port}?" "y/n" "${confirm}"
   if [[ "${confirm}" == "y" ]]; then
-     read_from_input http_port "$(gettext 'SmartDB web http port')" "" "${http_port}"
+     read_from_input http_port "$(gettext 'Web http port')" "" "${http_port}"
      set_config HTTP_PORT "${http_port}"
   fi
 
   confirm="n"
-  read_from_input confirm "$(gettext 'Do you need to customize the SmartDB external https port, defualt is ')${https_port}?" "y/n" "${confirm}"
+  read_from_input confirm "$(gettext 'Do you need to customize the app external https port, defualt is ')${https_port}?" "y/n" "${confirm}"
   if [[ "${confirm}" == "y" ]]; then
-    read_from_input https_port "$(gettext 'SmartDB web https port')" "" "${https_port}"
+    read_from_input https_port "$(gettext 'Web https port')" "" "${https_port}"
     set_config HTTPS_PORT "${https_port}"
   fi
   
   sed -i "s/HTTP_PORT/${http_port}/g" ${CONFIG_DIR}/nginx/smartdb.conf
   sed -i "s/HTTPS_PORT/${https_port}/g" ${CONFIG_DIR}/nginx/smartdb.conf
+}
+
+function init_db (){
+  print_yellow "\n5. $(gettext 'Initialize database')"
+  if ! exec_db_migrate; then
+    log_error "Failed to migrate database"
+    exit 1
+  fi
 }
 
 function main() {
@@ -215,6 +225,9 @@ function main() {
     print_done
   fi
   if set_service; then
+    print_done
+  fi
+  if init_db; then
     print_done
   fi
 }

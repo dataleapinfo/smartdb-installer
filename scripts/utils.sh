@@ -10,11 +10,12 @@ NC='\033[0m' # No Color
 
 function print_banner() {
   cat <<"EOF"
-  ____                           _     ____   ____  
- / ___|  _ __ ___    __ _  _ __ | |_  |  _ \ | __ ) 
- \___ \ | '_ ` _ \  / _` || '__|| __| | | | ||  _ \ 
-  ___) || | | | | || (_| || |   | |_  | |_| || |_) |
- |____/ |_| |_| |_| \__,_||_|    \__| |____/ |____/ 
+ ____  ____       _                    _   
+|  _ \| __ )     / \   __ _  ___ _ __ | |_ 
+| | | |  _ \    / _ \ / _` |/ _ \ '_ \| __|
+| |_| | |_) |  / ___ \ (_| |  __/ | | | |_ 
+|____/|____/  /_/   \_\__, |\___|_| |_|\__|
+                      |___/                
 EOF
   echo
   echo -e "$BLUE $VERSION $NC "
@@ -182,9 +183,16 @@ function pre_config() {
   mkdir_if_not_exist "${CONFIG_DIR}/admin/license"
 
   if [[ ! -f "${CONFIG_ENV}" ]]; then
-    cp example.env "${CONFIG_ENV}"
+    cp before_install.env "${CONFIG_ENV}"
   else 
     print_check "${CONFIG_ENV}"
+  fi
+  if [[ ! -f ".env" ]]; then
+    ln -s "${CONFIG_ENV}" .env
+  fi
+
+  if [[ ! -f "./yml/.env" ]]; then
+    ln -s "${CONFIG_ENV}" ./yml/.env
   fi
   
   if [[ ! -f "${CONFIG_DIR}/mysql/my.cnf" ]]; then
@@ -247,6 +255,12 @@ set_curr_version() {
 function get_curr_version() {
   curr_version=$(get_config CURR_VERSION "${VERSION}")
   echo "${curr_version}"
+}
+
+function get_latest_version() {
+   curl -s 'https://api.github.com/repos/dataleapinfo/smartdb-installer/releases/latest' |
+    grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' |
+    sed 's/\"//g;s/,//g;s/ //g' 
 }
 
 function get_env_value() {
@@ -553,5 +567,76 @@ function check_md5() {
   else
     echo "0"
   fi
+}
+
+function get_db_migrate_cmd() {
+  db_host=$(get_config DB_HOST)
+  redis_host=$(get_config REDIS_HOST)
+  use_ipv6=$(get_config USE_IPV6)
+
+  cmd="docker compose "
+  if [[ "${db_host}" == "mysql" ]]; then
+    cmd+=" -f yml/mysql.yml"
+  fi
+  if [[ "${redis_host}" == "redis" ]]; then
+    cmd+=" -f yml/redis.yml"
+  fi
+
+  if [[ "${use_ipv6}" != "1" ]]; then
+    cmd+=" -f yml/network.yml"
+  else
+    cmd+=" -f yml/network-v6.yml"
+  fi
+  echo "$cmd"
+}
+
+function create_db_env() {
+  cmd=$(get_db_migrate_cmd)
+  ${cmd} up -d || {
+    exit 1
+  }
+}
+
+function exec_db_migrate() {
+  db_host=$(get_config DB_HOST)
+  redis_host=$(get_config REDIS_HOST)
+  db_password=$(get_config DB_PASSWORD)
+  
+  create_db_env
+  case "${db_host}" in
+    "mysql")
+      while [[ "$(docker inspect -f '{{ .State.Health.Status }}' smartdb_${db_host})" != "healthy" ]]; do
+        echo "Waiting for MySQL to be ready..."
+        sleep 5
+      done
+      ;;
+  esac
+  case "${redis_host}" in
+    "redis")
+      while [[ "$(docker inspect -f '{{ .State.Health.Status }}' smartdb_${redis_host})" != "healthy" ]]; do
+        echo "Waiting for Redis to be ready..."
+        sleep 5
+      done
+      ;;
+  esac
+  sleep 20
+  docker exec -i smartdb_mysql bash -c "mysql -usmartdb -p${db_password} -e 'show databases;'" || {
+    echo "Failed to connection database"
+  }
+  echo "Start database migrate"
+  cmd="docker compose -f yml/init-db.yml"  
+  ${cmd} up -d || {
+    echo "Failed to start database migrate"
+    exit 1
+  }
+  while [[ "$(docker inspect -f '{{ .State.Health.Status }}' smartdb_init_db)" != "healthy" ]]; do
+    echo "Waiting for database migrate to be ready..."
+    sleep 5
+  done
+
+  # docker exec -i smartdb_smartdata_admin bash -c 'java -jar /app/smartdata-admin.jar --spring.flyway.enabled=true' || {
+  #   echo "Failed to migrate database"
+  #   exit 1
+  # }
 }
 

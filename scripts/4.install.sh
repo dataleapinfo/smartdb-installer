@@ -27,10 +27,9 @@ function post_install() {
   https_port=$(get_config HTTPS_PORT)
   server_name=$(get_config SERVER_NAME)
   
-  print_yellow "$(gettext 'You can use the following command to start database and SmartDB and then visit')"
+  print_yellow "$(gettext 'You can use the following command to start app and  then visit')"
   echo "cd ${PROJECT_DIR}"
-  print_green "\n1. First start the database ./smartdbcli.sh init_db"
-  echo "\n2. And then start SmartDB ./smartdbcli.sh start"
+  echo "\n2. And then start ${PROJECT_NAME} ./smartdbcli.sh start"
 
   echo "$(gettext 'For more commands, you can enter ./smartdbcli.sh --help to understand')"
 
@@ -46,7 +45,7 @@ function post_install() {
 
   print_yellow "\n $(gettext 'More information')"
   echo "$(gettext 'Official Website'): https://www.dataleapinfo.com"
-  echo "$(gettext 'Documentation'): https://docs.dataleapinfo.com"
+  echo "$(gettext 'Documentation'): https://dataleapinfo.github.io/smartdb-doc/intro/"
   echo -e "\n"
 }
 
@@ -55,18 +54,18 @@ function main() {
   check_docker
   pre_config
   set_curr_version
-  
+
   print_green "\n>>> Install and config docker."
   if ! bash "${BASE_DIR}/1.install-docker.sh"; then
     exit 1  
   fi
+
+  # print_green "\n>>> Loading docker images."
+  # if ! bash "${BASE_DIR}/2.load-images.sh"; then
+  #   exit 1  
+  # fi
   
-  print_green "\n>>> Loading docker images."
-  if ! bash "${BASE_DIR}/2.load-images.sh"; then
-    exit 1  
-  fi
-  
-  print_green "\n>>> Deploy and config SmartDB."
+  print_green "\n>>> Deploy and config ${PROJECT_NAME}."
   if ! bash "${BASE_DIR}/3.app-config.sh"; then
     exit 1  
   fi

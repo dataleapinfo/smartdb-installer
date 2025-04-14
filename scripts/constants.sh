@@ -12,6 +12,7 @@ fi
 GLOBAL_ENV=${PROJECT_DIR}/global.env
 . "${GLOBAL_ENV}"
 
+export PROJECT_NAME="DBAgent"
 export COPYRIGHT="Copyright (c) 2025 DataLeap Info Tech Co., Ltd. All rights reserved."
 
 export CONFIG_DIR=${GLOBAL_CONFIG_DIR}
@@ -35,3 +36,4 @@ fi
 export ARCH
 export DOCKER_BIN_URL="${DOCKER_MIRROR}/${ARCH}/docker-${DOCKER_VERSION}.tgz"
 export DOCKER_COMPOSE_BIN_URL="${DOCKER_COMPOSE_MIRROR}/${DOCKER_COMPOSE_VERSION}/docker-compose-linux-${ARCH}"
+

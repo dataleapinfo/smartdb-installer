@@ -1,26 +1,24 @@
-# SmartDB 安装包
+# DBAgent 安装包
 
-项目负责安装，部署，更新，管理 SmartDB
+项目负责安装，部署，更新，管理 DBAgent
 
 ## 环境依赖
 
-On a Linux host: docker 20.10.10-ce+ and docker-compose 1.18.0+ .
+- Linux x86_64
+- Kernel 大于 4.0
 
 ## 配置文件
 
 如果需要，请在安装前自定义属性默认值；否则将使用自带默认值
-example.env
+before_install.env
 
 ## 安装部署
 
 ```bash
-# 第一步. 安装
+# 安装
 $ ./smartdbcli.sh install
 
-# 第二步. 初始化数据
-$ ./smartdbcli.sh init_db
-
-# 第三步. 启动应用
+# 启动应用
 $ ./smartdbcli.sh start
 
 ```
@@ -31,11 +29,14 @@ $ ./smartdbcli.sh start
 # 启动
 $ ./smartdbcli.sh start
 
-# 停止
+# 停止应用
 $ ./smartdbcli.sh stop
 
 # 重启
 $ ./smartdbcli.sh restart
+
+# 备份
+$ ./smartdbcli.sh backup
 
 # 状态
 
@@ -48,7 +49,7 @@ $ ./smartdbcli.sh logs
 
 ## 离线安装
 
-[从官网下载离线安装包](https://doc.dataleapinfo.com//smartdb/download/releases)
+[从官网下载离线安装包](https://www.dataleapinfo.com:8443/download/smartdb/)
 
 ## 目录说明
 
@@ -62,7 +63,7 @@ $ ./smartdbcli.sh logs
 │   │   └── smartdb.conf
 │   └── redis
 │       └── redis.conf
-├── example.env
+├── before_install.env
 ├── global.env
 ├── README.md
 ├── scripts

@@ -1,0 +1,57 @@
+services:
+  smartdata_admin:
+    image: smartdb/smartdata-admin:${VERSION}
+    container_name: smartdb_init_db
+    networks:
+      - smartdb
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - JAVA_OPTS=-Xms512m -Xmx1024m
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - flyway_enabled=true
+      #
+      # redis single
+      - REDIS_HOST=${REDIS_HOST:-smartdb_redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      #
+      # redis sentinel
+      # - REDIS_NAME=${REDIS_NAME}
+      # - REDIS_SENTINELS=${REDIS_SENTINELS}
+      # - REDIS_PASSWORD=/run/secrets/redis_password
+      # - REDIS_DB=${REDIS_DB}
+      # mail
+      # - MAIL_HOST=${MAIL_HOST}
+      # - MAIL_PORT=${MAIL_PORT}
+      # - MAIL_USER=${MAIL_USER}
+      # - MAIL_PWD=${MAIL_PWD}
+      # mqtt
+      # - APP_MSG_HOST=${APP_MSG_HOST}
+      # - APP_MSG_PORT=${APP_MSG_PORT}
+      # task ip,ip
+      # - TASK_WHITE_LIST=${TASK_WHITE_LIST}
+      # sso
+      # - SSO_URL=${SSO_URL}
+      # - SSO_CLEAR_PATH=${SSO_URL}/token/revocation
+      - APP_DOMAIN=${DB_URL:-}
+      - APP_TITLE=${DB_APP_TITLE:-}
+      - APP_SHORT_TITLE=${DB_APP_SHORT_TITLE:-}
+      # - CID=${UNIQUE_ID}
+      - JUMPER_URL=http://dbgatex_server:3000/terminals/exec
+    volumes:
+      - ${VOLUME_DIR}/admin/data:/app/smartdb
+      - ${VOLUME_DIR}/admin/data:/app/logs
+      - ${CONFIG_DIR}/admin/license:/app/smartdb/license
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8084/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+
+networks:
+  smartdb:
+    external: true

@@ -37,39 +37,53 @@ function pre_check() {
 }
 
 function help() {
-  echo "SmartDB Deployment Management"
+  echo "${PROJECT_NAME} Deployment Management"
   echo
   echo "Usage:"
   echo "  ./smartdbcli.sh <action> <args>"
   echo "  ./smartdbcli.sh help"
   echo
   echo "Installation Actions: "
-  echo "  install                   Install SmartDB"
-  echo "  init_db                   Initialize SmartDB Database"
+  echo "  install                   Install ${PROJECT_NAME}"
+  echo "  upgrade                   Upgrade ${PROJECT_NAME}"
   echo
   echo "Components Actions: "
+  echo "  config                    Config ${PROJECT_NAME}"
   echo "  start                     Start components"
   echo "  stop                      Stop components"
   echo "  restart                   Restart components"
+  echo "  uninstall                 Uninstall ${PROJECT_NAME}"
   echo
   echo "Database Actions: "
   echo "  backup_db                 Backup database"
   echo "  restore_db [backup_file]  Restore database"
   echo
   echo "More Actions: "
-  echo "  status                    Show SmartDB status"
-  echo "  logs [service]            Show SmartDB logs"
-  echo "  version                   Show version"
-  echo "  uninstall                 Uninstall SmartDB"
-  # echo "  config                  Config SmartDB"
+  echo "  status                    Show ${PROJECT_NAME} status"
+  echo "  logs [service]            Show ${PROJECT_NAME} logs"
+  echo "  version                   Show ${PROJECT_NAME} version"
+  echo "  check_update              Check version"
   echo 
 }
 EXEC_COMMANDS=""
 
 function start() {
+  if docker ps | grep -E 'smartdb' &>/dev/null; then
+    echo_error "${PROJECT_NAME} is already running"
+    exit 1
+  fi
   ${EXEC_COMMANDS} up -d
 }
 function stop() {
+  confirm="n"
+  target_name=${PROJECT_NAME}
+  if [[ -n "${target}" ]]; then
+    target_name=${target}
+  fi
+  read_from_input confirm "Are you sure you want to stop ${target_name}?" "y/n" "${confirm}"
+  if [[ "${confirm}" != "y" ]]; then
+    exit 1
+  fi
   if [[ -n "${target}" ]]; then
     ${EXEC_COMMANDS} stop "${target}" && ${EXEC_COMMANDS} rm -f "${target}"
     return
@@ -79,6 +93,12 @@ function stop() {
 }
 
 function restart() {
+  confirm="n"
+  read_from_input confirm "Are you sure you want to restart ${PROJECT_NAME}?" "y/n" "${confirm}"
+  if [[ "${confirm}" != "y" ]]; then
+    exit 1
+  fi
+  
   stop
   echo -e "\n"
   sleep 1
@@ -127,6 +147,23 @@ function start_network() {
   #
   # "${cmd} up -d"
 }
+
+function check_update() {
+  curr_version=$(get_curr_version)
+  latest_version=$(get_latest_version)
+  if [[ "${curr_version}" == "${latest_version}" ]]; then
+    print_green "You are using the latest version: ${curr_version}"
+    echo 
+    return
+  fi
+  if [[ -n  "${latest_version}" ]] && [[ ${latest_version} =~ v.* ]]; then
+    print_yellow "There is a new version: ${latest_version}"
+  else 
+    exit 1
+  fi
+
+}
+
 function main() {
   if [[ "${action}" == "help" || "${action}" == "--help" || "${action}" == "h" || "${action}" == "-h" ]]; then
     echo ""
@@ -144,9 +181,9 @@ function main() {
       bash "${SCRIPT_DIR}/4.install.sh"
       start_network
       ;;
-    init_db)
-      bash "${SCRIPT_DIR}/00.init-db.sh"
-      ;;
+    # init_db)
+    #   bash "${SCRIPT_DIR}/00.init-db.sh"
+    #   ;;
     start)
       start
       ;;
@@ -168,11 +205,20 @@ function main() {
     config)
       echo "..."
       ;;
+    init_db)
+      exec_db_migrate
+      ;;
     backup_db)
       bash "${SCRIPT_DIR}/5.backup-db.sh"
       ;;
     restore_db)
       bash "${SCRIPT_DIR}/6.restore-db.sh" "$target"
+      ;;
+    check_update)
+      check_update
+      ;;
+    upgrade)
+      bash "${SCRIPT_DIR}/7.upgrade.sh"
       ;;
     uninstall)
       bash "${SCRIPT_DIR}/8.uninstall.sh"

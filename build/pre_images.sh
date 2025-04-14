@@ -137,7 +137,7 @@ function clear_tmp() {
 
 function main() {
 
-  echo "[Start] SmartDB preprocessing images"
+  echo "[Start] ${PROJECT_NAME} preprocessing images"
   echo
   echo "[TMP_DIR] $TMP_DIR"
   echo "[IMAGE_DIR] $IMAGE_DIR"
