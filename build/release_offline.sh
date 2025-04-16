@@ -44,6 +44,7 @@ function download() {
   fi
 }
 
+
 function publish_package() {
   FILE_NAME="dbagent-offline-${VERSION}"
   RELEASE_DIR="${TMP_DIR}/${FILE_NAME}"
@@ -64,8 +65,11 @@ function publish_package() {
   
   cd ${BUILD_DIR}
   check_dir "${DOWNLOAD_DIR}/${VERSION}"
-  mv "${TMP_DIR}/${FILE_NAME}.tar" "${DOWNLOAD_DIR}/${VERSION}"
   
+  publish_download_server "${TMP_DIR}/${FILE_NAME}.tar"
+
+  mv "${TMP_DIR}/${FILE_NAME}.tar" "${DOWNLOAD_DIR}/${VERSION}"
+
   rm -rf "${RELEASE_DIR}"
 }
 

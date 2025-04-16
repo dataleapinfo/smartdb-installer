@@ -26,7 +26,7 @@ export DOCKER_VERSION=27.4.0
 export DOCKER_MIRROR="https://mirrors.aliyun.com/docker-ce/linux/static/stable"
 
 export DOCKER_COMPOSE_VERSION=v2.31.0
-export DOCKER_COMPOSE_MIRROR="https://download.jumpserver.org/docker/compose/releases/download"
+export DOCKER_COMPOSE_MIRROR="https://www.dataleapinfo.com/download/docker/compose/releases/download"
 
 ARCH=$(uname -m)
 if [ -n "${BUILD_ARCH}" ]; then

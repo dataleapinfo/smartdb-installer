@@ -42,13 +42,15 @@ pipeline {
       steps {
         script {
           try {
-            docker.withRegistry(registryUrl, registryCredentialId) {
-              sh '''
-                cd build
-                chmod +x build.sh
-                ./build.sh
-              '''
-            }            
+            sshagent(['jenkins-ssh-100']) {
+              docker.withRegistry(registryUrl, registryCredentialId) {
+                sh '''
+                  cd build
+                  chmod +x build.sh
+                  ./build.sh
+                '''
+              }            
+            }
             echo "打包成功"
           } catch (err) {
             echo  "打包错误:${err.message}"
@@ -57,20 +59,6 @@ pipeline {
         }
       }
     }
-    // stage('Push download service') {
-    //   steps {
-    //     script {
-    //       try {
-    //         sshagent(['jenkins-ssh-100']) {
-    //           sh "ssh root@192.168.3.100 /usr/bin/docker service update --image ${fullImageTag} dbmanager_service"
-    //         }
-    //       } catch (err) {
-    //         echo  "推送错误:${err.message}"
-    //         error("推送错误，请检查目标服务的配置和服务状态")
-    //       }
-    //     }
-    //   }
-    // }
   }
   post {
     always {
