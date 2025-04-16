@@ -19,4 +19,4 @@ images/*
 .idea
 *.tar
 .DS_store
-smartdb-release/compose
+dbagent-release/compose

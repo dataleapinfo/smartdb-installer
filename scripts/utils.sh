@@ -165,10 +165,10 @@ function set_config() {
 function pre_config() {
   cd "${PROJECT_DIR}" || exit 1
   if check_root; then
-    echo -e "#!/usr/bin/env bash\n#" > /usr/bin/smartdbcli
-    echo -e "cd ${PROJECT_DIR}" >> /usr/bin/smartdbcli
-    echo -e './smartdbcli.sh $@' >> /usr/bin/smartdbcli
-    chmod 755 /usr/bin/smartdbcli
+    echo -e "#!/usr/bin/env bash\n#" > /usr/bin/dbagentcli
+    echo -e "cd ${PROJECT_DIR}" >> /usr/bin/dbagentcli
+    echo -e './dbagentcli.sh $@' >> /usr/bin/dbagentcli
+    chmod 755 /usr/bin/dbagentcli
   fi
   
   print_yellow "Please configure the environment variables in ${CONFIG_DIR}"
@@ -200,10 +200,10 @@ function pre_config() {
   else 
     print_check "${CONFIG_DIR}/mysql/my.cnf"
   fi
-  if [[ ! -f "${CONFIG_DIR}/nginx/smartdb.conf" ]]; then
-    cp "${PROJECT_DIR}/config/nginx/smartdb.conf" "${CONFIG_DIR}/nginx/smartdb.conf"
+  if [[ ! -f "${CONFIG_DIR}/nginx/default.conf" ]]; then
+    cp "${PROJECT_DIR}/config/nginx/default.conf" "${CONFIG_DIR}/nginx/default.conf"
   else 
-    print_check "${CONFIG_DIR}/nginx/smartdb.conf"
+    print_check "${CONFIG_DIR}/nginx/default.conf"
   fi
   if [[ ! -f "${CONFIG_DIR}/nginx/ssl/server.crt" ]]; then
     cp "${PROJECT_DIR}/config/nginx/ssl/server.crt" "${CONFIG_DIR}/nginx/ssl/server.crt"
@@ -360,10 +360,10 @@ function get_images() {
     echo "${image}"
   done
     
-  echo "smartdb/dbgatex-server:${VERSION}"
-  echo "smartdb/dbgatex-web:${VERSION}"
-  echo "smartdb/smartdata-admin:${VERSION}"
-  echo "smartdb/dbmanager:${VERSION}"
+  echo "dbagent/dbgatex-server:${VERSION}"
+  echo "dbagent/dbgatex-web:${VERSION}"
+  echo "dbagent/smartdata-admin:${VERSION}"
+  echo "dbagent/dbmanager:${VERSION}"
 }
 
 function check_images() {
@@ -540,8 +540,8 @@ function get_app_service_commands() {
 
 function get_service_name() {
   service=$1
-  if [[ "${service:0:3}" != "smartdb" ]]; then
-    service="smartdb_${service}"
+  if [[ "${service:0:3}" != "dbagent" ]]; then
+    service="dbagent_${service}"
   fi
   echo "${service}"
 }
@@ -597,7 +597,21 @@ function create_db_env() {
   }
 }
 
+function create_db_database() {
+  db_host=$(get_config DB_HOST)
+  db_engine=$(get_config DB_ENGINE "mysql")
+  db_user=$(get_config DB_USER)
+  db_password=$(get_config DB_PASSWORD)
+  case "${db_host}" in
+    "mysql")
+      # docker exec -i dbagent_mysql mysql -u"$db_user" -p"$db_password" < "${PROJECT_DIR}/sql/${db_engine}/smartdata.sql"
+      docker exec -i dbagent_mysql mysql -u"$db_user" -p"$db_password" < "${PROJECT_DIR}/sql/${db_engine}/smartdata_backup.sql"
+      ;;
+  esac
+}
+
 function exec_db_migrate() {
+  type=$1
   db_host=$(get_config DB_HOST)
   redis_host=$(get_config REDIS_HOST)
   db_password=$(get_config DB_PASSWORD)
@@ -605,7 +619,7 @@ function exec_db_migrate() {
   create_db_env
   case "${db_host}" in
     "mysql")
-      while [[ "$(docker inspect -f '{{ .State.Health.Status }}' smartdb_${db_host})" != "healthy" ]]; do
+      while [[ "$(docker inspect -f '{{ .State.Health.Status }}' dbagent_${db_host})" != "healthy" ]]; do
         echo "Waiting for MySQL to be ready..."
         sleep 5
       done
@@ -613,30 +627,29 @@ function exec_db_migrate() {
   esac
   case "${redis_host}" in
     "redis")
-      while [[ "$(docker inspect -f '{{ .State.Health.Status }}' smartdb_${redis_host})" != "healthy" ]]; do
+      while [[ "$(docker inspect -f '{{ .State.Health.Status }}' dbagent_${redis_host})" != "healthy" ]]; do
         echo "Waiting for Redis to be ready..."
         sleep 5
       done
       ;;
   esac
   sleep 20
-  docker exec -i smartdb_mysql bash -c "mysql -usmartdb -p${db_password} -e 'show databases;'" || {
-    echo "Failed to connection database"
-  }
+  if [[ "${type}" == "init" ]]; then
+    create_db_database || {
+      echo "Failed to create database"
+    }
+  fi
   echo "Start database migrate"
   cmd="docker compose -f yml/init-db.yml"  
   ${cmd} up -d || {
     echo "Failed to start database migrate"
     exit 1
   }
-  while [[ "$(docker inspect -f '{{ .State.Health.Status }}' smartdb_init_db)" != "healthy" ]]; do
+  while [[ "$(docker inspect -f '{{ .State.Health.Status }}' dbagent_init_db)" != "healthy" ]]; do
     echo "Waiting for database migrate to be ready..."
     sleep 5
   done
-
-  # docker exec -i smartdb_smartdata_admin bash -c 'java -jar /app/smartdata-admin.jar --spring.flyway.enabled=true' || {
-  #   echo "Failed to migrate database"
-  #   exit 1
-  # }
+  ${cmd} down
+  print_green "Database migrate done"
 }
 

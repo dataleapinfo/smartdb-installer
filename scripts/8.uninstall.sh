@@ -9,21 +9,21 @@ function stop_services() {
   docker compose version &>/dev/null || return
   if [[ -f "$CONFIG_ENV" ]]; then
     cd "${PROJECT_DIR?}" || exit 1
-    bash ./smartdbcli.sh stop
-    bash ./smartdbcli.sh stop_db
+    bash ./dbagentcli.sh stop
+    # bash ./dbagentcli.sh stop_db
     sleep 5s
     echo 
   fi
 }
 
-function delete_smartdbcli() {
-  if check_root && [[ -f "/usr/bin/smartdbcli" ]]; then
-    echo -e "rm /usr/bin/smartdbcli"
-    rm -f /usr/bin/smartdbcli
+function delete_dbagentcli() {
+  if check_root && [[ -f "/usr/bin/dbagentcli" ]]; then
+    echo -e "rm /usr/bin/dbagentcli"
+    rm -f /usr/bin/dbagentcli
   fi
 }
 
-function delete_smartdb() {
+function delete_dbagent() {
   if [ ! -f "${CONFIG_ENV}" ]; then
     return
   fi 
@@ -100,8 +100,8 @@ function delete_docker() {
 
 function uninstall() {
   stop_services
-  delete_smartdbcli
-  delete_smartdb
+  delete_dbagentcli
+  delete_dbagent
   delete_compose
   delete_docker
 }

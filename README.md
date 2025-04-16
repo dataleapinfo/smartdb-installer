@@ -16,10 +16,10 @@ before_install.env
 
 ```bash
 # 安装
-$ ./smartdbcli.sh install
+$ ./dbagentcli.sh install
 
 # 启动应用
-$ ./smartdbcli.sh start
+$ ./dbagentcli.sh start
 
 ```
 
@@ -27,29 +27,29 @@ $ ./smartdbcli.sh start
 
 ```
 # 启动
-$ ./smartdbcli.sh start
+$ ./dbagentcli.sh start
 
 # 停止应用
-$ ./smartdbcli.sh stop
+$ ./dbagentcli.sh stop
 
 # 重启
-$ ./smartdbcli.sh restart
+$ ./dbagentcli.sh restart
 
 # 备份
-$ ./smartdbcli.sh backup
+$ ./dbagentcli.sh backup
 
 # 状态
 
-$ ./smartdbcli.sh status
+$ ./dbagentcli.sh status
 
 # 日志
 
-$ ./smartdbcli.sh logs
+$ ./dbagentcli.sh logs
 ```
 
 ## 离线安装
 
-[从官网下载离线安装包](https://www.dataleapinfo.com:8443/download/smartdb/)
+[从官网下载离线安装包](https://www.dataleapinfo.com/download/dbagent/)
 
 ## 目录说明
 
@@ -60,7 +60,7 @@ $ ./smartdbcli.sh logs
 │   ├── mysql
 │   │   └── my.cnf
 │   ├── nginx
-│   │   └── smartdb.conf
+│   │   └── default.conf
 │   └── redis
 │       └── redis.conf
 ├── before_install.env
@@ -83,7 +83,7 @@ $ ./smartdbcli.sh logs
     ├── mysql.yml
     ├── nginx.yml
     ├── redis.yml
-    └── smartdb-admin.yml
+    └── smartdata-admin.yml
 
 6 directories, 22 files
 ```

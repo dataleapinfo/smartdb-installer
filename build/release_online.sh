@@ -6,13 +6,13 @@ PROJECT_DIR=$(dirname "${BUILD_DIR}")
 
 cd "${PROJECT_DIR}" || exit 1
 
-TMP_DIR="/tmp/smartdb"
+TMP_DIR="/tmp/dbagent"
 
 . "${BUILD_DIR}/utils.sh"
 
 function publish_package() {
   
-  FILE_NAME="smartdb-installer-${VERSION}"
+  FILE_NAME="dbagent-installer-${VERSION}"
   RELEASE_DIR="${TMP_DIR}/${FILE_NAME}"
   
   rm -rf "${RELEASE_DIR:?}"/*

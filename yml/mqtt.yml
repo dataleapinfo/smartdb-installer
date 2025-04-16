@@ -1,10 +1,10 @@
 services:
   mqtt:
     image: emqx:5.7
-    container_name: smartdb_mqtt
+    container_name: dbagent_mqtt
     restart: always
     networks:
-      - smartdb
+      - dbagent
     ports:
       - 1883:1883
       - 8083:8083
@@ -19,5 +19,5 @@ services:
       - ${VOLUME_DIR}/emqx/log:/opt/emqx/log
 
 networks:
-  smartdb:
+  dbagent:
     external: true

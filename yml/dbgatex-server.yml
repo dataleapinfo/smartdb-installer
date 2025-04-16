@@ -1,10 +1,10 @@
 services:
   dbgatex_server:
     image: smartdb/dbgatex-server:${VERSION}
-    container_name: smartdb_dbgatex_server
+    container_name: dbagent_dbgatex_server
     restart: always
     networks:
-      - smartdb
+      - dbagent
     environment:
       - TZ=${TZ:-Asia/Shanghai}
       - NODE_ENV=production_self
@@ -36,5 +36,5 @@ services:
       retries: 3
       start_period: 90s
 networks:
-  smartdb:
+  dbagent:
     external: true

@@ -1,11 +1,11 @@
 services:
   redis:
     image: redis:7.2-alpine3.18
-    container_name: smartdb_redis
-    hostname: smartdb_redis
+    container_name: dbagent_redis
+    hostname: dbagent_redis
     restart: always
     networks:
-      - smartdb
+      - dbagent
     command:
       [
         "redis-server",
@@ -28,5 +28,5 @@ services:
       start_period: 10s
 
 networks:
-  smartdb:
+  dbagent:
     external: true

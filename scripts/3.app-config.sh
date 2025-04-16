@@ -6,12 +6,12 @@ BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 function set_data_dir() {
   print_yellow "\n1. Config data directory."
-  volume_dir=$(get_config VOLUME_DIR "/opt/smartdb")
+  volume_dir=$(get_config VOLUME_DIR "/opt/dbagent")
   confirm="n"
   read_from_input confirm "Do you need to customize the data directory, otherwise default settings will be used ${volume_dir}?" "y/n" "${confirm}"
   if [[ "${confirm}" == "y" ]]; then
     echo
-    echo " such as) /data/smartdb"
+    echo " such as) /data/dbagent"
     echo "Waring: you can not change it after installation, otherwise the database may be lost"
     echo
     df -h | grep -Ev "devfs|tmpfs|overlay|shm|snap|boot"
@@ -202,13 +202,22 @@ function set_service() {
     set_config HTTPS_PORT "${https_port}"
   fi
   
-  sed -i "s/HTTP_PORT/${http_port}/g" ${CONFIG_DIR}/nginx/smartdb.conf
-  sed -i "s/HTTPS_PORT/${https_port}/g" ${CONFIG_DIR}/nginx/smartdb.conf
+  sed -i "s/HTTP_PORT/${http_port}/g" ${CONFIG_DIR}/nginx/default.conf
+  sed -i "s/HTTPS_PORT/${https_port}/g" ${CONFIG_DIR}/nginx/default.conf
 }
 
+function rm_network() {
+  docker network rm dbagent &>/dev/null
+}
+
+function create_network() {
+  print_yellow "Initialize network ..."
+  rm_network
+  docker network create dbagent
+}
 function init_db (){
   print_yellow "\n5. $(gettext 'Initialize database')"
-  if ! exec_db_migrate; then
+  if ! exec_db_migrate "init"; then
     log_error "Failed to migrate database"
     exit 1
   fi
@@ -227,6 +236,7 @@ function main() {
   if set_service; then
     print_done
   fi
+  create_network
   if init_db; then
     print_done
   fi

@@ -1,4 +1,4 @@
 networks:
-  server:
+  dbagent:
     driver: bridge
     enable_ipv6: true

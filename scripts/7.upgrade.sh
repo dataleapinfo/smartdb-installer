@@ -26,7 +26,7 @@ function upgrade_config() {
     log_error "Docker is not running, please install and start"
     exit 1
   fi
-  local containers=("smartdb_dbgatex_server" "smartdb_smartdata_admin" "smartdb_dbmanager" "smartdb_dbgatex_web" "smartdb_lb")
+  local containers=("dbagent_dbgatex_server" "dbagent_smartdata_admin" "dbagent_dbmanager" "dbagent_dbgatex_web" "dbagent_lb")
   for container in "${containers[@]}"; do
     if docker ps -a | grep ${container} &>/dev/null; then
       docker stop ${container} &>/dev/null
@@ -68,13 +68,13 @@ function backup_config() {
 }
 
 function db_migratetions() {
-  if docker ps | grep -E 'smartdb' &>/dev/null; then
+  if docker ps | grep -E 'dbagent' &>/dev/null; then
     confirm="y"
     read_from_input confirm "Find that the DBAgent container is running, do you want to close the container and continue to upgrade?" "y/n" "${confirm}"
     if [[ "${confirm}" != "y" ]]; then
       echo 
       cd "${PROJECT_DIR}" || exit 1
-      bash ./smartdbcli.sh stop
+      bash ./dbagentcli.sh stop
       sleep 5s
       echo
     else
@@ -146,7 +146,7 @@ function main() {
   clean_images
   
   echo_success "Upgrade to version ${to_version} successfully, now restart the container"
-  echo "cd ${PROJECT_DIR} && ./smartdbcli.sh start \n"
+  echo "cd ${PROJECT_DIR} && ./dbagentcli.sh start \n"
   set_curr_version
 }
 

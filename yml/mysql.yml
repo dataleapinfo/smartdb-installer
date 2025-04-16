@@ -1,10 +1,10 @@
 services:
   mysql:
     image: mysql:8.0.40-debian
-    container_name: smartdb_mysql
+    container_name: dbagent_mysql
     restart: always
     networks:
-      - smartdb
+      - dbagent
     # env_file:
     #   - ${CONFIG_ENV}
     environment:
@@ -34,5 +34,5 @@ services:
       retries: 3
       start_period: 90s
 networks:
-  smartdb:
+  dbagent:
     external: true

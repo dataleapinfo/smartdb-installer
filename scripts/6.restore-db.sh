@@ -20,7 +20,7 @@ function main() {
   DB_NAME=$(get_config DB_NAME)
   case "${DB_HOST}" in
     "mysql")
-      while [[ "$(docker inspect -f '{{ .State.Health.Status }}' smartdb_${DB_HOST})" != "healthy" ]]; do
+      while [[ "$(docker inspect -f '{{ .State.Health.Status }}' dbagent_${DB_HOST})" != "healthy" ]]; do
         echo "Waiting for MySQL to be ready..."
         sleep 5
       done
@@ -37,7 +37,7 @@ function main() {
       exit 1
       ;;
   esac
-  if ! docker run --rm --env-file=${CONFIG_ENV} -i --network=smartdb -v "${BACKUP_DIR}:${BACKUP_DIR}" ${db_images} bash -c "${cmd}"; then
+  if ! docker run --rm --env-file=${CONFIG_ENV} -i --network=dbagent -v "${BACKUP_DIR}:${BACKUP_DIR}" ${db_images} bash -c "${cmd}"; then
     print_error "Restore database failed. Please check the log or try manually."
     exit 1
   else 
@@ -47,7 +47,7 @@ function main() {
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
   if [[ -z "$1" ]]; then
-    print_error "Please specify the backup file! Usage: ./smartdbcli.sh restore_db <backup_file>"
+    print_error "Please specify the backup file! Usage: ./dbagentcli.sh restore_db <backup_file>"
     exit 1
   fi
   if [[ ! -f $1 ]]; then

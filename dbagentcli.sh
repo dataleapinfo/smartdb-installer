@@ -12,7 +12,7 @@ args=("$@")
 
 function check_config_env() {
   if [[ ! -f "${CONFIG_ENV}" ]]; then
-    echo "Config file not found: ${CONFIG_ENV}, please usage ./smartdbcli.sh -h"
+    echo "Config file not found: ${CONFIG_ENV}, please usage ./dbagentcli.sh -h"
     return 3
   fi
    
@@ -40,8 +40,8 @@ function help() {
   echo "${PROJECT_NAME} Deployment Management"
   echo
   echo "Usage:"
-  echo "  ./smartdbcli.sh <action> <args>"
-  echo "  ./smartdbcli.sh help"
+  echo "  ./dbagentcli.sh <action> <args>"
+  echo "  ./dbagentcli.sh help"
   echo
   echo "Installation Actions: "
   echo "  install                   Install ${PROJECT_NAME}"
@@ -68,8 +68,9 @@ function help() {
 EXEC_COMMANDS=""
 
 function start() {
-  if docker ps | grep -E 'smartdb' &>/dev/null; then
-    echo_error "${PROJECT_NAME} is already running"
+  confirm="n"
+  read_from_input confirm "Are you sure you want to start ${PROJECT_NAME}?" "y/n" "${confirm}"
+  if [[ "${confirm}" != "y" ]]; then
     exit 1
   fi
   ${EXEC_COMMANDS} up -d
@@ -128,29 +129,10 @@ function logs() {
   fi
 }
 
-function rm_network() {
-  docker network rm smartdb &>/dev/null
-}
-
-function start_network() {
-  print_yellow "Initialize network ..."
-  docker network rm smartdb &>/dev/null
-  docker network create smartdb
-
-  # use_ipv6=$(get_config USE_IPV6)
-  # cmd="docker compose"
-  # if [[ "${use_ipv6}" != "1" ]]; then
-  #   cmd+=" -f yml/network.yml"
-  # else
-  #   cmd+=" -f yml/network-v6.yml"
-  # fi
-  #
-  # "${cmd} up -d"
-}
-
 function check_update() {
   curr_version=$(get_curr_version)
   latest_version=$(get_latest_version)
+  echo "latest version: ${latest_version}, curr_version: ${curr_version}"
   if [[ "${curr_version}" == "${latest_version}" ]]; then
     print_green "You are using the latest version: ${curr_version}"
     echo 
@@ -179,11 +161,7 @@ function main() {
       ;;
     install)
       bash "${SCRIPT_DIR}/4.install.sh"
-      start_network
       ;;
-    # init_db)
-    #   bash "${SCRIPT_DIR}/00.init-db.sh"
-    #   ;;
     start)
       start
       ;;

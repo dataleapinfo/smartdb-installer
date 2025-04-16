@@ -1,10 +1,10 @@
 services:
   dbmanager:
     image: smartdb/dbmanager:${VERSION}
-    container_name: smartdb_dbmanager
+    container_name: dbagent_dbmanager
     restart: always
     networks:
-      - smartdb
+      - dbagent
     environment:
       - TZ=${TZ:-Asia/Shanghai}
     healthcheck:
@@ -14,5 +14,5 @@ services:
       retries: 3
       start_period: 10s
 networks:
-  smartdb:
+  dbagent:
     external: true

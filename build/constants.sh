@@ -4,8 +4,8 @@ BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 . "${BUILD_DIR}/version.env"
 
-export CACHE_DIR=~/.smartdb/cache
-export DOWNLOAD_DIR=/home/download/smartdb
+export CACHE_DIR=~/.dbagent/cache
+export DOWNLOAD_DIR=/home/download/dbagent
 
 export DOCKER_VERSION=27.4.0
 export DOCKER_MIRROR="https://mirrors.aliyun.com/docker-ce/linux/static/stable"

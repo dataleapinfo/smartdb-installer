@@ -1,9 +1,9 @@
 services:
-  smartdata_admin:
+  init_db:
     image: smartdb/smartdata-admin:${VERSION}
-    container_name: smartdb_init_db
+    container_name: dbagent_init_db
     networks:
-      - smartdb
+      - dbagent
     environment:
       - TZ=${TZ:-Asia/Shanghai}
       - JAVA_OPTS=-Xms512m -Xmx1024m
@@ -11,7 +11,7 @@ services:
       - DB_PORT=${DB_PORT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - flyway_enabled=true
+      # - flyway_enabled=true
       #
       # redis single
       - REDIS_HOST=${REDIS_HOST:-smartdb_redis}
@@ -53,5 +53,5 @@ services:
       start_period: 90s
 
 networks:
-  smartdb:
+  dbagent:
     external: true

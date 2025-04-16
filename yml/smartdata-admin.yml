@@ -1,10 +1,10 @@
 services:
   smartdata_admin:
     image: smartdb/smartdata-admin:${VERSION}
-    container_name: smartdb_smartdata_admin
+    container_name: dbagent_smartdata_admin
     restart: always
     networks:
-      - smartdb
+      - dbagent
     environment:
       - TZ=${TZ:-Asia/Shanghai}
       - JAVA_OPTS=-Xms512m -Xmx1024m
@@ -46,5 +46,5 @@ services:
       - ${VOLUME_DIR}/admin/data:/app/logs
       - ${CONFIG_DIR}/admin/license:/app/smartdb/license
 networks:
-  smartdb:
+  dbagent:
     external: true

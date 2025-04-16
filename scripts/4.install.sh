@@ -29,9 +29,9 @@ function post_install() {
   
   print_yellow "$(gettext 'You can use the following command to start app and  then visit')"
   echo "cd ${PROJECT_DIR}"
-  echo "\n2. And then start ${PROJECT_NAME} ./smartdbcli.sh start"
+  print_green "\n And then start ${PROJECT_NAME} ./dbagentcli.sh start"
 
-  echo "$(gettext 'For more commands, you can enter ./smartdbcli.sh --help to understand')"
+  echo "$(gettext 'For more commands, you can enter ./dbagentcli.sh --help to understand')"
 
   print_yellow "\n $(gettext 'Web access')"
   if [ -n "${server_name}" ]; then
@@ -45,7 +45,7 @@ function post_install() {
 
   print_yellow "\n $(gettext 'More information')"
   echo "$(gettext 'Official Website'): https://www.dataleapinfo.com"
-  echo "$(gettext 'Documentation'): https://dataleapinfo.github.io/smartdb-doc/intro/"
+  echo "$(gettext 'Documentation'): https://dataleapinfo.github.io/dbagent-doc/intro/"
   echo -e "\n"
 }
 
@@ -60,10 +60,10 @@ function main() {
     exit 1  
   fi
 
-  # print_green "\n>>> Loading docker images."
-  # if ! bash "${BASE_DIR}/2.load-images.sh"; then
-  #   exit 1  
-  # fi
+  print_green "\n>>> Loading docker images."
+  if ! bash "${BASE_DIR}/2.load-images.sh"; then
+    exit 1  
+  fi
   
   print_green "\n>>> Deploy and config ${PROJECT_NAME}."
   if ! bash "${BASE_DIR}/3.app-config.sh"; then

@@ -6,7 +6,7 @@ PROJECT_DIR=$(dirname "${BUILD_DIR}")
 
 cd "${PROJECT_DIR}" || exit 1
 
-TMP_DIR="/tmp/smartdb"
+TMP_DIR="/tmp/dbagent"
 RELEASE_DIR="${TMP_DIR}/offline"
 
 . "${BUILD_DIR}/utils.sh"
@@ -45,7 +45,7 @@ function download() {
 }
 
 function publish_package() {
-  FILE_NAME="smartdb-offline-${VERSION}"
+  FILE_NAME="dbagent-offline-${VERSION}"
   RELEASE_DIR="${TMP_DIR}/${FILE_NAME}"
   
   rm -rf "${RELEASE_DIR:?}"/*
