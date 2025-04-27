@@ -14,6 +14,7 @@ function publish_package() {
   
   FILE_NAME="dbagent-installer-${VERSION}"
   RELEASE_DIR="${TMP_DIR}/${FILE_NAME}"
+  echo "[RELEASE_DIR] ${RELEASE_DIR}"
   
   rm -rf "${RELEASE_DIR:?}"/*
   mkdir -p "${RELEASE_DIR}"
@@ -34,9 +35,9 @@ function publish_package() {
   cd ${BUILD_DIR}
   check_dir "${DOWNLOAD_DIR}/${VERSION}"
   
-  publish_download_server "${TMP_DIR}/${FILE_NAME}.tar"
+  publish_download_server "${RELEASE_DIR}.tar"
   
-  mv "${TMP_DIR}/${FILE_NAME}.tar" "${DOWNLOAD_DIR}/${VERSION}"
+  mv "${RELEASE_DIR}.tar" "${DOWNLOAD_DIR}/${VERSION}"
 
   rm -rf "${RELEASE_DIR}"
 }
@@ -45,7 +46,7 @@ function main() {
 
   echo "[Start] SmartDB online publish"
   echo "[VERSION] ${VERSION}"
-  echo "[RELEASE_DIR] ${RELEASE_DIR}"
+  # echo "[RELEASE_DIR] ${RELEASE_DIR}"
   
   publish_package
   

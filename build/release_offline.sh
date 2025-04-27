@@ -7,7 +7,7 @@ PROJECT_DIR=$(dirname "${BUILD_DIR}")
 cd "${PROJECT_DIR}" || exit 1
 
 TMP_DIR="/tmp/dbagent"
-RELEASE_DIR="${TMP_DIR}/offline"
+# RELEASE_DIR="${TMP_DIR}/offline"
 
 . "${BUILD_DIR}/utils.sh"
 
@@ -48,7 +48,8 @@ function download() {
 function publish_package() {
   FILE_NAME="dbagent-offline-${VERSION}"
   RELEASE_DIR="${TMP_DIR}/${FILE_NAME}"
-  
+  echo "[RELEASE_DIR] ${RELEASE_DIR}"
+
   rm -rf "${RELEASE_DIR:?}"/*
   mkdir -p "${RELEASE_DIR}"
 
@@ -66,9 +67,9 @@ function publish_package() {
   cd ${BUILD_DIR}
   check_dir "${DOWNLOAD_DIR}/${VERSION}"
   
-  publish_download_server "${TMP_DIR}/${FILE_NAME}.tar"
+  publish_download_server "${RELEASE_DIR}.tar"
 
-  mv "${TMP_DIR}/${FILE_NAME}.tar" "${DOWNLOAD_DIR}/${VERSION}"
+  mv "${RELEASE_DIR}.tar" "${DOWNLOAD_DIR}/${VERSION}"
 
   rm -rf "${RELEASE_DIR}"
 }
@@ -77,7 +78,7 @@ function main() {
 
   echo "[Start] SmartDB offline publish"
   echo "[VERSION] ${VERSION}"
-  echo "[RELEASE_DIR] ${RELEASE_DIR}"
+  # echo "[RELEASE_DIR] ${RELEASE_DIR}"
  
   download
   publish_package 
