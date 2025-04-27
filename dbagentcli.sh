@@ -181,7 +181,7 @@ function main() {
       get_curr_version  
       ;;
     config)
-      echo "..."
+      bash "${SCRIPT_DIR}/3.app-config.sh" "$target"
       ;;
     init_db)
       exec_db_migrate
@@ -196,7 +196,7 @@ function main() {
       check_update
       ;;
     upgrade)
-      bash "${SCRIPT_DIR}/7.upgrade.sh"
+      bash "${SCRIPT_DIR}/7.upgrade.sh" "$target"
       ;;
     uninstall)
       bash "${SCRIPT_DIR}/8.uninstall.sh"

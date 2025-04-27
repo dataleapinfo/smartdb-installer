@@ -360,10 +360,10 @@ function get_images() {
     echo "${image}"
   done
     
-  echo "dbagent/dbgatex-server:${VERSION}"
-  echo "dbagent/dbgatex-web:${VERSION}"
-  echo "dbagent/smartdata-admin:${VERSION}"
-  echo "dbagent/dbmanager:${VERSION}"
+  echo "smartdb/dbgatex-server:${VERSION}"
+  echo "smartdb/dbgatex-web:${VERSION}"
+  echo "smartdb/smartdata-admin:${VERSION}"
+  echo "smartdb/dbmanager:${VERSION}"
 }
 
 function check_images() {
@@ -600,12 +600,10 @@ function create_db_env() {
 function create_db_database() {
   db_host=$(get_config DB_HOST)
   db_engine=$(get_config DB_ENGINE "mysql")
-  db_user=$(get_config DB_USER)
   db_password=$(get_config DB_PASSWORD)
   case "${db_host}" in
     "mysql")
-      # docker exec -i dbagent_mysql mysql -u"$db_user" -p"$db_password" < "${PROJECT_DIR}/sql/${db_engine}/smartdata.sql"
-      docker exec -i dbagent_mysql mysql -u"$db_user" -p"$db_password" < "${PROJECT_DIR}/sql/${db_engine}/smartdata_backup.sql"
+      docker exec -i dbagent_mysql mysql -uroot -p"$db_password" < "${PROJECT_DIR}/sql/${db_engine}/smartdata.sql"
       ;;
   esac
 }
@@ -643,13 +641,18 @@ function exec_db_migrate() {
   cmd="docker compose -f yml/init-db.yml"  
   ${cmd} up -d || {
     echo "Failed to start database migrate"
+    docker logs $(${cmd} ps -q dbagent_init_db) 2>/dev/null
+    ${cmd} down
     exit 1
   }
+
   while [[ "$(docker inspect -f '{{ .State.Health.Status }}' dbagent_init_db)" != "healthy" ]]; do
     echo "Waiting for database migrate to be ready..."
     sleep 5
   done
+  print_green "Database migration completed successfully."
   ${cmd} down
+
   print_green "Database migrate done"
 }
 

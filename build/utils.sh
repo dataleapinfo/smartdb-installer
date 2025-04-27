@@ -24,6 +24,6 @@ function get_image_name_replace_tag() {
 function publish_download_server() {
   FILE_NAME=$1
   ssh "${REMOTE_HOST}" "mkdir -p ${REMOTE_DIR}/${VERSION}"
-  scp "${TMP_DIR}/${FILE_NAME}.tar" "${REMOTE_HOST}:${REMOTE_DIR}/${VERSION}" 
+  scp "${FILE_NAME}" "${REMOTE_HOST}:${REMOTE_DIR}/${VERSION}" 
 }
 

@@ -4,6 +4,8 @@ BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 . "${BASE_DIR}/utils.sh"
 
+PROJECT_DIR=$(dirname "${BUILD_DIR}")
+
 function set_data_dir() {
   print_yellow "\n1. Config data directory."
   volume_dir=$(get_config VOLUME_DIR "/opt/dbagent")
@@ -49,6 +51,9 @@ function set_db_config() {
 function set_external_db() {
   local db_engine=$1
   db_host=$(get_config DB_HOST)
+  echo_yellow "To use an external database, you need to create the database and grant corresponding permissions."
+  echo_yellow "Refer to sql/mysql/smartdata.sql"
+  echo 
   read_from_input db_host "Please enter DB server IP" "" "${db_host}"
   if [[ "${db_host}" == "127.0.0.1" || "${db_host}" == "localhost" ]]; then
     print_error "Can not use localhost as DB server IP"
@@ -202,6 +207,7 @@ function set_service() {
     set_config HTTPS_PORT "${https_port}"
   fi
   
+  cp "${PROJECT_DIR}/config/nginx/default.conf" "${CONFIG_DIR}/nginx/default.conf"
   sed -i "s/HTTP_PORT/${http_port}/g" ${CONFIG_DIR}/nginx/default.conf
   sed -i "s/HTTPS_PORT/${https_port}/g" ${CONFIG_DIR}/nginx/default.conf
 }

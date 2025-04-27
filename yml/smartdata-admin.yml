@@ -41,6 +41,8 @@ services:
       - APP_SHORT_TITLE=${DB_APP_SHORT_TITLE:-}
       # - CID=${UNIQUE_ID}
       - JUMPER_URL=http://dbgatex_server:3000/terminals/exec
+      - VERSION=${CURR_VERSION}
+      - flyway_locations=db/freeVer
     volumes:
       - ${VOLUME_DIR}/admin/data:/app/smartdb
       - ${VOLUME_DIR}/admin/data:/app/logs
