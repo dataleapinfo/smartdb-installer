@@ -1,0 +1,94 @@
+def registryUrl="https://registry.cn-hangzhou.aliyuncs.com"
+def registryCredentialId="aliyuncs"
+def allowedBranches=["refs/heads/master"]
+
+pipeline {
+  agent {
+    label 'built-in'
+  }
+  environment {
+    commitId = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+  }
+  stages {
+    stage('Check Branch') {
+      steps {
+        script {
+          echo "commitId: ${env.BRANCH_NAME}"
+			    def tokenCredential
+          withCredentials([string(credentialsId: 'smartdb-installer', variable: 'WEBHOOK_TOKEN')]) {
+              tokenCredential = env.WEBHOOK_TOKEN
+          }
+          properties([
+              pipelineTriggers([
+                  GenericTrigger(
+                      genericVariables: [
+                          [key: 'BRANCH_NAME', value: '\$.ref']
+                      ],
+                      token: tokenCredential
+                  )
+              ])
+          ])
+			    echo "BRANCH_NAME: ${env.BRANCH_NAME}"
+          if (!allowedBranches.contains(env.BRANCH_NAME)) {
+            echo "Skipping build."
+            currentBuild.result = 'ABORTED'
+            error("Aborted Pipeline")
+            return
+          }
+        }
+      }
+    }
+    stage('Build package') {
+      steps {
+        script {
+          try {
+            sshagent(['jenkins-ssh-100']) {
+              docker.withRegistry(registryUrl, registryCredentialId) {
+                sh '''
+                  cd build
+                  chmod +x build.sh
+                  ./build.sh
+                '''
+              }            
+            }
+            echo "打包成功"
+          } catch (err) {
+            echo  "打包错误:${err.message}"
+            error("打包错误，请检查构建脚本和构建参数配置")
+          }
+        }
+      }
+    }
+  }
+  post {
+    always {
+      script {
+        echo "BUILD_ID: ${env.BUILD_ID}"
+        echo "BUILD_NUMBER: ${env.BUILD_NUMBER}"
+        def duration = currentBuild.durationString
+        echo "Pipeline Duration: ${duration}"
+        def startTime = currentBuild.startTimeInMillis
+        def endTime = new Date().getTime()
+        echo "Pipeline Start Time: ${new Date(startTime).format('yyyy-MM-dd HH:mm:ss')}"
+        echo "Pipeline End Time: ${new Date(endTime).format('yyyy-MM-dd HH:mm:ss')}"
+        deleteDir()
+      }
+    }
+    success {
+      script {
+        emailext body: '''${SCRIPT, template="groovy-html.template"}''',
+            mimeType: 'text/html',
+            subject: "[SmartDB] Succeeded Pipeline: ${currentBuild.fullDisplayName}",
+            to: '$DEFAULT_RECIPIENTS'
+      }
+    }
+    failure {
+      script {
+        emailext body: '''${SCRIPT, template="groovy-html.template"}''',
+            mimeType: 'text/html',
+            subject: "[SmartDB] Failed Pipeline: ${currentBuild.fullDisplayName}",
+            to: '$DEFAULT_RECIPIENTS'
+      }
+    }
+  }
+}
