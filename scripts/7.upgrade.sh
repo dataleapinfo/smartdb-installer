@@ -71,7 +71,7 @@ function db_migratetions() {
   if docker ps | grep -E 'dbagent' &>/dev/null; then
     confirm="y"
     read_from_input confirm "Find that the DBAgent container is running, do you want to close the container and continue to upgrade?" "y/n" "${confirm}"
-    if [[ "${confirm}" != "y" ]]; then
+    if [[ "${confirm}" == "y" ]]; then
       echo 
       cd "${PROJECT_DIR}" || exit 1
       bash ./dbagentcli.sh stop
@@ -82,7 +82,7 @@ function db_migratetions() {
     fi
   fi
   if ! exec_db_migrate; then
-    echo_error "Failed to migrate database"
+    print_error "Failed to migrate database"
     confirm="n"
     read_from_input confirm "Failed to migrate database. Do you want to continue upgrade?" "y/n" "${confirm}"
     if [[ "${confirm}" != "y" ]]; then
@@ -115,7 +115,7 @@ function main() {
   fi
 
   read_from_input confirm "Upgrade to version ${to_version}?" "y/n" "${confirm}"
-  if [[ "${confirm}" != "y"  || -z "${to_version" ]]; then
+  if [[ "${confirm}" != "y" || -z "${to_version}" ]]; then
     exit 3
   fi
 
@@ -129,23 +129,23 @@ function main() {
   check_compose_install
   echo 
 
-  echo_yellow ">>>2. Loading images"
+  print_yellow ">>>2. Loading images"
   bash "${BUILD_DIR}/2.load-images.sh"
 
-  echo_yellow ">>>3. Backup database"
+  print_yellow ">>>3. Backup database"
   backup_db
 
-  echo_yellow ">>>4. Backup config file"
+  print_yellow ">>>4. Backup config file"
   backup_config
 
-  echo_yellow ">>>5. Migrate database"
+  print_yellow ">>>5. Migrate database"
   echo "Change database may be wait a few minutes"
   db_migratetions
 
-  echo_yellow ">>>6. Clean images"
+  print_yellow ">>>6. Clean images"
   clean_images
   
-  echo_success "Upgrade to version ${to_version} successfully, now restart the container"
+  print_success "Upgrade to version ${to_version} successfully, now restart the container"
   echo "cd ${PROJECT_DIR} && ./dbagentcli.sh start \n"
   set_curr_version
 }

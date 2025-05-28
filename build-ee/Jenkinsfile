@@ -45,7 +45,7 @@ pipeline {
             sshagent(['jenkins-ssh-100']) {
               docker.withRegistry(registryUrl, registryCredentialId) {
                 sh '''
-                  cd build
+                  cd build-ee
                   chmod +x build.sh
                   ./build.sh
                 '''
