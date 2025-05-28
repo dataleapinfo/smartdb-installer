@@ -1,6 +1,6 @@
 def registryUrl="https://registry.cn-hangzhou.aliyuncs.com"
 def registryCredentialId="aliyuncs"
-def allowedBranches=["refs/heads/master"]
+def allowedBranches=["refs/heads/master-ee"]
 
 pipeline {
   agent {

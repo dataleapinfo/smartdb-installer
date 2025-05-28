@@ -28,6 +28,8 @@ function publish_package() {
   if [[ -n ${VERSION} ]]; then
     sed -i "s@VERSION=.*@VERSION=\"${VERSION}\"@g" "${RELEASE_DIR}/global.env"
   fi
+  sed -i "s@flyway_locations=.*@flyway_locations=db/migration@g" "${RELEASE_DIR}/yml/init-db.yml"
+  sed -i "s@flyway_locations=.*@flyway_locations=db/migration@g" "${RELEASE_DIR}/yml/smartdata-admin.yml"
 
   cd ${TMP_DIR}
   tar -cvf "${FILE_NAME}.tar" ${FILE_NAME}
