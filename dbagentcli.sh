@@ -146,7 +146,13 @@ function check_update() {
 
 }
 
+function get_uuid() {
+  export UNIQUE_ID=$(cat /sys/class/dmi/id/product_uuid || echo "")
+  echo "UNIQUE_ID: ${UNIQUE_ID}"
+}
+
 function main() {
+  get_uuid
   if [[ "${action}" == "help" || "${action}" == "--help" || "${action}" == "h" || "${action}" == "-h" ]]; then
     echo ""
   elif [[ "${action}" == "install" ]]; then 

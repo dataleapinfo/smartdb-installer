@@ -22,6 +22,7 @@ function publish_package() {
   cp -R . "${RELEASE_DIR}"
 
   rm -rf "${RELEASE_DIR}/build"
+  rm -rf "${RELEASE_DIR}/build-ee"
   rm -rf "${RELEASE_DIR}/.git"
   rm -rf "${RELEASE_DIR}/images" 
 
